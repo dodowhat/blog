@@ -265,6 +265,7 @@ sudo docker run -d --name gost \
     --net=host ginuerzh/gost \
     -L &amp;quot;http2://${USER}:${PASS}@${BIND_IP}:${PORT}?cert=${CERT}&amp;amp;key=${KEY}&amp;quot;
 &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;先不要启动服务，因为证书还没有生成。&lt;/p&gt;
 &lt;p&gt;启动服务:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;$ chmod +x gost.sh
 $ ./gost.sh
@@ -274,7 +275,6 @@ $ ./gost.sh
 $ sudo docker rm gost
 $ ./gost.sh
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;先不要启动服务，因为证书还没有生成。&lt;/p&gt;
 &lt;h2 id=&#34;使用-acmesh-签发-lets-encrypt-证书&#34;&gt;使用 acme.sh 签发 Let&amp;rsquo;s Encrypt 证书&lt;/h2&gt;
 &lt;p&gt;以 root 身份安装 acme.sh:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;$ sudo su -

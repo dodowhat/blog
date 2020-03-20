@@ -45,6 +45,8 @@ VPS 初始化以及 Docker 安装参考这篇文章 [Ubuntu VPS 初始化设置 
         --net=host ginuerzh/gost \
         -L "http2://${USER}:${PASS}@${BIND_IP}:${PORT}?cert=${CERT}&key=${KEY}"
 
+先不要启动服务，因为证书还没有生成。
+
 启动服务:
 
     $ chmod +x gost.sh
@@ -55,8 +57,6 @@ VPS 初始化以及 Docker 安装参考这篇文章 [Ubuntu VPS 初始化设置 
     $ sudo docker stop gost
     $ sudo docker rm gost
     $ ./gost.sh
-
-先不要启动服务，因为证书还没有生成。
 
 ## 使用 acme.sh 签发 Let's Encrypt 证书
 
