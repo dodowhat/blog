@@ -16,7 +16,7 @@
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="apple-touch-icon-precomposed" href="/favicon.png">
 
-<link rel="stylesheet" href="/css/style.css?rnd=1584719467" />
+<link rel="stylesheet" href="/css/style.css?rnd=1584722221" />
 
 <meta property="og:title" content="部署 GOST HTTPS 代理" />
 <meta property="og:description" content="随着墙一步步升级，识别能力愈加强大，各路翻墙工具变得步履维艰，自创协议逐渐势微。 绕了一大圈之后，现在又回到起点，开始在不被封的主流协议上做文" />
@@ -67,6 +67,26 @@
 <p>VPS 初始化以及 Docker 安装参考这篇文章 <a href="/posts/ubuntu-server-initiation-and-docker-installation">Ubuntu VPS 初始化设置 + Docker安装</a></p>
 <h2 id="解析域名到-vps">解析域名到 VPS</h2>
 <p>你需要有一个域名，并且将它解析到你的 VPS 上。</p>
+<h2 id="使用-acmesh-签发-lets-encrypt-证书">使用 acme.sh 签发 Let&rsquo;s Encrypt 证书</h2>
+<p>以 root 身份安装 acme.sh:</p>
+<pre><code>$ sudo su -
+# apt install -y socat
+# curl https://get.acme.sh | sh
+# source ~/.bashrc
+</code></pre>
+<p>签发证书:</p>
+<pre><code># acme.sh --issue --standalone -d example.com
+# mkdir ~/example.com
+</code></pre>
+<p>安装证书:</p>
+<pre><code># acme.sh --install-cert -d example.com \
+  --fullchain-file ~/example.com/fullchain.pem \
+  --key-file ~/example.com/key.pem \
+  --cert-file ~/example.com/cert.pem \
+  --reloadcmd &quot;docker restart gost&quot;
+</code></pre>
+<p>证书会在每 60 天自动续签，并自动重启 gost 服务。</p>
+<p>因为现在 gost 还没有启动，docker 会报错，不用理会。</p>
 <h2 id="部署-gost-docker-镜像">部署 Gost Docker 镜像</h2>
 <p>执行 <code>exit</code> 返回普通用户。</p>
 <p>创建启动脚本 gost.sh:</p>
@@ -87,31 +107,9 @@ sudo docker run -d --name gost \
     --net=host ginuerzh/gost \
     -L &quot;http2://${USER}:${PASS}@${BIND_IP}:${PORT}?cert=${CERT}&amp;key=${KEY}&quot;
 </code></pre>
-<p>先不要启动服务，因为证书还没有生成。</p>
 <p>启动服务:</p>
 <pre><code>$ chmod +x gost.sh
 $ ./gost.sh
-</code></pre>
-<p>重启服务:</p>
-<pre><code>$ sudo docker stop gost
-$ sudo docker rm gost
-$ ./gost.sh
-</code></pre>
-<h2 id="使用-acmesh-签发-lets-encrypt-证书">使用 acme.sh 签发 Let&rsquo;s Encrypt 证书</h2>
-<p>以 root 身份安装 acme.sh:</p>
-<pre><code>$ sudo su -
-# apt install -y socat
-# curl https://get.acme.sh | sh
-# source ~/.bashrc
-</code></pre>
-<p>签发证书:</p>
-<pre><code># acme.sh --issue --standalone -d example.com
-# mkdir ~/example.com
-# acme.sh --install-cert -d example.com \
-  --fullchain-file ~/example.com/fullchain.pem \
-  --key-file ~/example.com/key.pem \
-  --cert-file ~/example.com/cert.pem \
-  --reloadcmd &quot;docker restart gost&quot;
 </code></pre>
 <h2 id="客户端">客户端</h2>
 <p>PC 推荐用 Clash for Windows，下载地址:</p>
