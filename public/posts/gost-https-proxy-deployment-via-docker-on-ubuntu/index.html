@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+        
+<meta charset="utf-8">
+<meta name="HandheldFriendly" content="True">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer-when-downgrade">
+
+<title>部署 GOST HTTPS 代理  - 张良计</title>
+<meta name="description" content="">
+
+<link rel="alternate" type="application/rss+xml" title="RSS" href="/rss/">
+
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon-precomposed" href="/favicon.png">
+
+<link rel="stylesheet" href="/css/style.css?rnd=1584679821" />
+
+<meta property="og:title" content="部署 GOST HTTPS 代理" />
+<meta property="og:description" content="随着墙一步步升级，识别能力愈加强大，各路翻墙工具变得步履维艰，自创协议逐渐势微。 绕了一大圈之后，现在又回到起点，开始在不被封的主流协议上做文" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/gost-https-proxy-deployment-via-docker-on-ubuntu/" />
+<meta property="article:published_time" content="2020-03-18T21:38:50+08:00" />
+<meta property="article:modified_time" content="2020-03-18T21:38:50+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="部署 GOST HTTPS 代理"/>
+<meta name="twitter:description" content="随着墙一步步升级，识别能力愈加强大，各路翻墙工具变得步履维艰，自创协议逐渐势微。 绕了一大圈之后，现在又回到起点，开始在不被封的主流协议上做文"/>
+
+
+
+
+
+
+    
+</head>
+<body>
+    <div class="container">
+        <header> 
+            
+                <h1 class="site-header">
+    <a href="/">张良计</a>
+</h1>
+<nav>
+    
+    
+</nav>
+
+            
+        </header>
+        <main>
+            
+
+    <article class="post">
+        <header>
+            <h1>部署 GOST HTTPS 代理</h1>
+        </header>
+        <div class="content">
+            <p>随着墙一步步升级，识别能力愈加强大，各路翻墙工具变得步履维艰，自创协议逐渐势微。</p>
+<p>绕了一大圈之后，现在又回到起点，开始在不被封的主流协议上做文章。</p>
+<p>其中比较稳妥的一个就是 HTTPS 代理。</p>
+<p>GOST 是一个GO语言实现的代理工具，官网有详细介绍，链接在文章底部。</p>
+<p>本文主要记录用 GOST 部署 HTTPS 代理服务的过程。</p>
+<hr>
+<p>VPS 初始化以及 Docker 安装参考这篇文章 <a href="/posts/ubuntu-server-initiation-and-docker-installation">Ubuntu VPS 初始化设置 + Docker安装</a></p>
+<h2 id="解析域名到-vps">解析域名到 VPS</h2>
+<p>你需要有一个域名，并且将它解析到你的 VPS 上。</p>
+<h2 id="部署-gost-docker-镜像">部署 Gost Docker 镜像</h2>
+<p>执行 <code>exit</code> 返回普通用户。</p>
+<p>创建启动脚本 gost.sh:</p>
+<pre><code>#!/bin/bash
+
+## 下面的四个参数需要改成你的
+DOMAIN=&quot;example.com&quot;
+USER=&quot;username&quot;
+PASS=&quot;password&quot;
+PORT=443
+
+BIND_IP=0.0.0.0
+CERT_DIR=/root/${DOMAIN}
+CERT=${CERT_DIR}/${DOMAIN}/fullchain.pem
+KEY=${CERT_DIR}/${DOMAIN}/key.pem
+sudo docker run -d --name gost \
+    -v ${CERT_DIR}:${CERT_DIR}:ro \
+    --net=host ginuerzh/gost \
+    -L &quot;http2://${USER}:${PASS}@${BIND_IP}:${PORT}?cert=${CERT}&amp;key=${KEY}&quot;
+</code></pre>
+<p>启动服务:</p>
+<pre><code>$ chmod +x gost.sh
+$ ./gost.sh
+</code></pre>
+<p>重启服务:</p>
+<pre><code>$ sudo docker stop gost
+$ sudo docker rm gost
+$ ./gost.sh
+</code></pre>
+<p>先不要启动服务，因为证书还没有生成。</p>
+<h2 id="使用-acmesh-签发-lets-encrypt-证书">使用 acme.sh 签发 Let&rsquo;s Encrypt 证书</h2>
+<p>以 root 身份安装 acme.sh:</p>
+<pre><code>$ sudo su -
+# apt install -y socat
+# curl https://get.acme.sh | sh
+# source ~/.bashrc
+</code></pre>
+<p>签发证书:</p>
+<pre><code># acme.sh --issue --standalone -d example.com
+# mkdir ~/example.com
+# acme.sh --install-cert -d example.com \
+  --fullchain-file ~/example.com/fullchain.pem \
+  --key-file ~/example.com/key.pem
+  --reloadcmd &quot;docker restart gost&quot;
+</code></pre>
+<h2 id="客户端">客户端</h2>
+<p>PC 推荐用 Clash for Windows，下载地址:</p>
+<ul>
+<li><a href="https://github.com/Fndroid/clash_for_windows_pkg/releases">Github Release</a></li>
+</ul>
+<p>Android 推荐用 Clash for Android，下载地址:</p>
+<ul>
+<li>
+<p><a href="https://github.com/Kr328/ClashForAndroid/releases">Github Release</a></p>
+</li>
+<li>
+<p><a href="https://play.google.com/store/apps/details?id=com.github.kr328.clash">Google Play</a></p>
+</li>
+</ul>
+<p>还可以用 Surfboard，兼容 Surge 配置文件，下载地址：</p>
+<ul>
+<li>
+<p><a href="https://apkpure.com/surfboard/com.getsurfboard">APK</a></p>
+</li>
+<li>
+<p><a href="https://play.google.com/store/apps/details?id=com.getsurfboard">Google Play</a></p>
+</li>
+</ul>
+<p>iOS 推荐用 ShadowRocket / Surge ，ShadowRocket 兼容 Surge 配置文件:</p>
+<ul>
+<li>美区 Apple Store 搜索</li>
+</ul>
+<h2 id="参考资料">参考资料</h2>
+<p><a href="https://github.com/acmesh-official/acme.sh">Acme.sh Documentation</a></p>
+<p><a href="https://haoel.github.io/">科学上网-左耳朵</a></p>
+<p><a href="https://docs.ginuerzh.xyz/gost/tls/">Gost 官方文档</a></p>
+<p><a href="https://github.com/Dreamacro/clash">Clash Manual</a></p>
+<p><a href="https://manual.nssurge.com/">Surge Manual</a></p>
+<p><a href="https://manual.getsurfboard.com/">Surfbloard 官网</a></p>
+
+        </div>
+        <div class="article-info">
+    
+        <div class="article-date">2020-03-18</div>
+    
+    <div class="article-taxonomies">
+        
+            
+    </div>
+</div>
+    </article>
+    
+
+
+        </main>
+        <footer>
+            
+                <p>© 2020<br>
+Powered by <a target="_blank" href="https://gohugo.io/">Hugo</a>, theme <a target="_blank" href="https://github.com/mitrichius/hugo-theme-anubis">Anubis</a>.
+</p>
+            
+        </footer>
+    </div>
+</body>
+</html>

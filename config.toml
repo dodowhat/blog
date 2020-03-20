@@ -1,0 +1,5 @@
+baseURL = "/"
+languageCode = "zh"
+title = "张良计"
+theme = "anubis"
+hasCJKLanguage = true
