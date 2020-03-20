@@ -78,7 +78,7 @@ Connection -> Seconds between keepalives 设为60，防止超时卡死。
 准备工作:
 
     $ sudo apt-get update
-    $ sudo apt-get install \
+    $ sudo apt-get install -y \
         apt-transport-https \
         ca-certificates \
         curl \
@@ -104,7 +104,7 @@ Connection -> Seconds between keepalives 设为60，防止超时卡死。
 安装:
 
     $ sudo apt-get update
-    $ sudo apt-get install docker-ce
+    $ sudo apt-get install -y docker-ce
 
 如果想要以普通用户使用 Docker，就将用户加入docker组:
 

@@ -16,7 +16,7 @@
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="apple-touch-icon-precomposed" href="/favicon.png">
 
-<link rel="stylesheet" href="/css/style.css?rnd=1584718326" />
+<link rel="stylesheet" href="/css/style.css?rnd=1584719467" />
 
 <meta property="og:title" content="部署 GOST HTTPS 代理" />
 <meta property="og:description" content="随着墙一步步升级，识别能力愈加强大，各路翻墙工具变得步履维艰，自创协议逐渐势微。 绕了一大圈之后，现在又回到起点，开始在不被封的主流协议上做文" />
@@ -80,8 +80,8 @@ PORT=443
 
 BIND_IP=0.0.0.0
 CERT_DIR=/root/${DOMAIN}
-CERT=${CERT_DIR}/${DOMAIN}/fullchain.pem
-KEY=${CERT_DIR}/${DOMAIN}/key.pem
+CERT=${CERT_DIR}/fullchain.pem
+KEY=${CERT_DIR}/key.pem
 sudo docker run -d --name gost \
     -v ${CERT_DIR}:${CERT_DIR}:ro \
     --net=host ginuerzh/gost \
@@ -109,7 +109,8 @@ $ ./gost.sh
 # mkdir ~/example.com
 # acme.sh --install-cert -d example.com \
   --fullchain-file ~/example.com/fullchain.pem \
-  --key-file ~/example.com/key.pem
+  --key-file ~/example.com/key.pem \
+  --cert-file ~/example.com/cert.pem \
   --reloadcmd &quot;docker restart gost&quot;
 </code></pre>
 <h2 id="客户端">客户端</h2>

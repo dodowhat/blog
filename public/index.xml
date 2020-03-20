@@ -258,8 +258,8 @@ PORT=443
 
 BIND_IP=0.0.0.0
 CERT_DIR=/root/${DOMAIN}
-CERT=${CERT_DIR}/${DOMAIN}/fullchain.pem
-KEY=${CERT_DIR}/${DOMAIN}/key.pem
+CERT=${CERT_DIR}/fullchain.pem
+KEY=${CERT_DIR}/key.pem
 sudo docker run -d --name gost \
     -v ${CERT_DIR}:${CERT_DIR}:ro \
     --net=host ginuerzh/gost \
@@ -287,7 +287,8 @@ $ ./gost.sh
 # mkdir ~/example.com
 # acme.sh --install-cert -d example.com \
   --fullchain-file ~/example.com/fullchain.pem \
-  --key-file ~/example.com/key.pem
+  --key-file ~/example.com/key.pem \
+  --cert-file ~/example.com/cert.pem \
   --reloadcmd &amp;quot;docker restart gost&amp;quot;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id=&#34;客户端&#34;&gt;客户端&lt;/h2&gt;
@@ -383,7 +384,7 @@ PasswordAuthentication yes  # 允许密码登录
 &lt;h2 id=&#34;安装-docker&#34;&gt;安装 Docker&lt;/h2&gt;
 &lt;p&gt;准备工作:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;$ sudo apt-get update
-$ sudo apt-get install \
+$ sudo apt-get install -y \
     apt-transport-https \
     ca-certificates \
     curl \
@@ -407,7 +408,7 @@ $ sudo add-apt-repository \
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;安装:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;$ sudo apt-get update
-$ sudo apt-get install docker-ce
+$ sudo apt-get install -y docker-ce
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;如果想要以普通用户使用 Docker，就将用户加入docker组:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;$ sudo usermod -aG docker user1

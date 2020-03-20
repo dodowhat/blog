@@ -38,8 +38,8 @@ VPS 初始化以及 Docker 安装参考这篇文章 [Ubuntu VPS 初始化设置 
 
     BIND_IP=0.0.0.0
     CERT_DIR=/root/${DOMAIN}
-    CERT=${CERT_DIR}/${DOMAIN}/fullchain.pem
-    KEY=${CERT_DIR}/${DOMAIN}/key.pem
+    CERT=${CERT_DIR}/fullchain.pem
+    KEY=${CERT_DIR}/key.pem
     sudo docker run -d --name gost \
         -v ${CERT_DIR}:${CERT_DIR}:ro \
         --net=host ginuerzh/gost \
@@ -73,7 +73,8 @@ VPS 初始化以及 Docker 安装参考这篇文章 [Ubuntu VPS 初始化设置 
     # mkdir ~/example.com
     # acme.sh --install-cert -d example.com \
       --fullchain-file ~/example.com/fullchain.pem \
-      --key-file ~/example.com/key.pem
+      --key-file ~/example.com/key.pem \
+      --cert-file ~/example.com/cert.pem \
       --reloadcmd "docker restart gost"
 
 ## 客户端
