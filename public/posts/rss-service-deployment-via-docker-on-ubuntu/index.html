@@ -16,7 +16,7 @@
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="apple-touch-icon-precomposed" href="/favicon.png">
 
-<link rel="stylesheet" href="/css/style.css?rnd=1584679821" />
+<link rel="stylesheet" href="/css/style.css?rnd=1584685639" />
 
 <meta property="og:title" content="自用 RSS 服务搭建 (Miniflux &#43; RSSHub)" />
 <meta property="og:description" content="互联网越来越分裂，巨头们各自圈地，糟糕的用户体验，漫天飞舞的广告，让人不堪忍受。 好在总有各路大神们来解决痛点，RSSHub 就是其中之一。 RSSHub 是" />
@@ -248,6 +248,18 @@ server {
 <pre><code>sudo nginx -s reload
 </code></pre>
 <p>RSSHub 用户认证配置好了。在 Miniflux 中新增订阅时，在 <code>高级选项</code> 中填写刚才的用户名密码就可以了。</p>
+<h2 id="移动端">移动端</h2>
+<p>Miniflux 是一个 PWA(Progressive web app) 应用，跨平台，响应式设计，在手机浏览器中也有很好的体验。</p>
+<p>在iOS 的 Safari 和 Android 的 Chrome 上你可以手机主界面上创建快捷方式，方便直接访问。</p>
+<p>也可以使用第三方客户端连接，前提是在 Miniflux 设置里开启 Fever API:</p>
+<p>Android 推荐 FeedMe:</p>
+<ul>
+<li><a href="https://play.google.com/store/apps/details?id=com.seazon.feedme">Google Play</a></li>
+</ul>
+<p>iOS 推荐 Reeder:</p>
+<ul>
+<li>在 Apple Store 中自行搜索</li>
+</ul>
 <h2 id="参考资料">参考资料</h2>
 <p><a href="https://miniflux.app/docs/installation.html#docker">Miniflux Manual</a></p>
 <p><a href="https://docs.rsshub.app/install/#docker-compose-bu-shu">RSSHub 官方文档</a></p>

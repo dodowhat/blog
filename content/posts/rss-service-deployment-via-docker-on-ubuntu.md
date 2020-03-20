@@ -241,6 +241,22 @@ RSSHub 自带 HTTP 基础认证功能，但只给少部分路由开启，不符�
 
 RSSHub 用户认证配置好了。在 Miniflux 中新增订阅时，在 `高级选项` 中填写刚才的用户名密码就可以了。
 
+## 移动端
+
+Miniflux 是一个 PWA(Progressive web app) 应用，跨平台，响应式设计，在手机浏览器中也有很好的体验。
+
+在iOS 的 Safari 和 Android 的 Chrome 上你可以手机主界面上创建快捷方式，方便直接访问。
+
+也可以使用第三方客户端连接，前提是在 Miniflux 设置里开启 Fever API:
+
+Android 推荐 FeedMe:
+
+* [Google Play](https://play.google.com/store/apps/details?id=com.seazon.feedme)
+
+iOS 推荐 Reeder:
+
+* 在 Apple Store 中自行搜索
+
 ## 参考资料
 
 [Miniflux Manual](https://miniflux.app/docs/installation.html#docker)

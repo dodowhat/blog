@@ -207,6 +207,18 @@ server {
 &lt;pre&gt;&lt;code&gt;sudo nginx -s reload
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;RSSHub 用户认证配置好了。在 Miniflux 中新增订阅时，在 &lt;code&gt;高级选项&lt;/code&gt; 中填写刚才的用户名密码就可以了。&lt;/p&gt;
+&lt;h2 id=&#34;移动端&#34;&gt;移动端&lt;/h2&gt;
+&lt;p&gt;Miniflux 是一个 PWA(Progressive web app) 应用，跨平台，响应式设计，在手机浏览器中也有很好的体验。&lt;/p&gt;
+&lt;p&gt;在iOS 的 Safari 和 Android 的 Chrome 上你可以手机主界面上创建快捷方式，方便直接访问。&lt;/p&gt;
+&lt;p&gt;也可以使用第三方客户端连接，前提是在 Miniflux 设置里开启 Fever API:&lt;/p&gt;
+&lt;p&gt;Android 推荐 FeedMe:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://play.google.com/store/apps/details?id=com.seazon.feedme&#34;&gt;Google Play&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;iOS 推荐 Reeder:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;在 Apple Store 中自行搜索&lt;/li&gt;
+&lt;/ul&gt;
 &lt;h2 id=&#34;参考资料&#34;&gt;参考资料&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&#34;https://miniflux.app/docs/installation.html#docker&#34;&gt;Miniflux Manual&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://docs.rsshub.app/install/#docker-compose-bu-shu&#34;&gt;RSSHub 官方文档&lt;/a&gt;&lt;/p&gt;
