@@ -78,23 +78,25 @@ VPS 初始化以及 Docker 安装参考这篇文章 [Ubuntu VPS 初始化设置 
 
 ## 客户端
 
-PC 推荐用 Clash for Windows，下载地址:
+PC: Clash for Windows，下载地址:
 
 *  [Github Release](https://github.com/Fndroid/clash_for_windows_pkg/releases)
 
-Android 推荐用 Clash for Android，下载地址:
+Android:
+
+Clash for Android，下载地址:
 
 * [Github Release](https://github.com/Kr328/ClashForAndroid/releases)
 
 * [Google Play](https://play.google.com/store/apps/details?id=com.github.kr328.clash)
 
-还可以用 Surfboard，兼容 Surge 配置文件，下载地址：
+Surfboard，兼容 Surge 配置文件，下载地址：
 
 * [APK](https://apkpure.com/surfboard/com.getsurfboard)
 
 * [Google Play](https://play.google.com/store/apps/details?id=com.getsurfboard)
 
-iOS 推荐用 ShadowRocket / Surge ，ShadowRocket 兼容 Surge 配置文件:
+iOS: ShadowRocket / Surge ，ShadowRocket 兼容 Surge 配置文件:
 
 * 美区 Apple Store 搜索
 

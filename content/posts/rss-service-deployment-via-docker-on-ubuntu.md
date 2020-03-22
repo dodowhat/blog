@@ -217,7 +217,7 @@ RSSHub 自带 HTTP 基础认证功能，但只给少部分路由开启，不符�
 
 安装工具:
 
-    $ sudo apt install apache2-utils
+    $ sudo apt install -y apache2-utils
 
 创建用户:
 
