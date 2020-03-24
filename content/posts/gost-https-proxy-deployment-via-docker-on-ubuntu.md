@@ -4,7 +4,7 @@ date: 2020-03-18T21:38:50+08:00
 draft: false
 ---
 
-目前 HTTPS 比较稳一种协议。
+目前 HTTPS 是比较稳一种协议。
 
 GOST 是一个GO语言实现的代理工具，官网有详细介绍，链接在文章底部。
 
@@ -53,19 +53,19 @@ VPS 初始化以及 Docker 安装参考这篇文章 [Ubuntu VPS 初始化设置 
     #!/bin/bash
 
     ## 下面的四个参数需要改成你的
-    DOMAIN="example.com"
-    USER="username"
-    PASS="password"
-    PORT=443
+    domain="example.com"
+    username="username"
+    password="password"
+    port=443
 
-    BIND_IP=0.0.0.0
-    CERT_DIR=/root/${DOMAIN}
-    CERT=${CERT_DIR}/fullchain.pem
-    KEY=${CERT_DIR}/key.pem
+    bind_ip=0.0.0.0
+    cert_dir=/root/${domain}
+    cert_file=${cert_dir}/fullchain.pem
+    key_file=${cert_dir}/key.pem
     sudo docker run -d --name gost \
-        -v ${CERT_DIR}:${CERT_DIR}:ro \
+        -v ${cert_dir}:${cert_dir}:ro \
         --net=host ginuerzh/gost \
-        -L "http2://${USER}:${PASS}@${BIND_IP}:${PORT}?cert=${CERT}&key=${KEY}"
+        -L "http2://${username}:${password}@${bind_ip}:${port}?cert=${cert_file}&key=${key_file}"
 
 启动服务:
 
@@ -95,6 +95,18 @@ Surfboard，兼容 Surge 配置文件，下载地址：
 iOS: ShadowRocket / Surge ，ShadowRocket 兼容 Surge 配置文件:
 
 * 美区 Apple Store 搜索
+
+## 分流规则
+
+自动生成配置文件 (Surge / Clash)，适用于以上全部客户端
+
+有两个版本:
+
+1. 大陆 IP 走直连，其余走代理。
+
+2. GFWList
+
+项目地址: [https://github.com/dodowhat/gfwrules](https://github.com/dodowhat/gfwrules)
 
 ## 参考资料
 
