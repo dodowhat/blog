@@ -18,35 +18,26 @@ VPS 初始化以及 Docker 安装参考这篇文章 [Ubuntu VPS 初始化设置 
 
 你需要有一个域名，并且将它解析到你的 VPS 上。
 
-## 使用 acme.sh 签发 Let's Encrypt 证书
+## 使用 certbot 签发 Let's Encrypt 证书
 
-以 root 身份安装 acme.sh:
+安装 certbot:
 
-    $ sudo su -
-    # apt install -y socat
-    # curl https://get.acme.sh | sh
-    # source ~/.bashrc
+    $ sudo apt-get update
+    $ sudo apt-get install software-properties-common
+    $ sudo add-apt-repository universe
+    $ sudo add-apt-repository ppa:certbot/certbot
+    $ sudo apt-get update
+    $ sudo apt-get install certbot
 
 签发证书:
 
-    # acme.sh --issue --standalone -d example.com
-    # mkdir ~/example.com
+    $ sudo certbot certonly --standalone
 
-安装证书:
+根据提示输入域名和邮箱
 
-    # acme.sh --install-cert -d example.com \
-      --fullchain-file ~/example.com/fullchain.pem \
-      --key-file ~/example.com/key.pem \
-      --cert-file ~/example.com/cert.pem \
-      --reloadcmd "docker restart gost"
-
-证书会在每 60 天自动续签，并自动重启 gost 服务。
-
-因为现在 gost 还没有启动，docker 会报错，不用理会。
+证书默认生成在`/etc/letsencrypt/live/<YOUR.DOMAIN.COM/>`目录下
 
 ## 部署 Gost Docker 镜像
-
-执行 `exit` 返回普通用户。
 
 创建启动脚本 gost.sh:
 
@@ -59,9 +50,9 @@ VPS 初始化以及 Docker 安装参考这篇文章 [Ubuntu VPS 初始化设置 
     port=443
 
     bind_ip=0.0.0.0
-    cert_dir=/root/${domain}
+    cert_dir=/etc/letsencrypt/${domain}
     cert_file=${cert_dir}/fullchain.pem
-    key_file=${cert_dir}/key.pem
+    key_file=${cert_dir}/privkey.pem
     sudo docker run -d --name gost \
         -v ${cert_dir}:${cert_dir}:ro \
         --net=host ginuerzh/gost \
@@ -71,6 +62,21 @@ VPS 初始化以及 Docker 安装参考这篇文章 [Ubuntu VPS 初始化设置 
 
     $ chmod +x gost.sh
     $ ./gost.sh
+
+## 证书自动更新
+
+证书会在90天后过期，我们建立一个cron job来自动更新证书:
+
+    $ sudo crontab -e
+
+写入如下内容:
+
+    0 0 1 * * /usr/bin/certbot renew --force-renewal
+    5 0 1 * * /usr/bin/docker restart gost
+
+crontab格式说明:
+
+    分[0-59] 时[0-23] 日[1-31] 月[1-12] 星期[0-7] 要执行的命令
 
 ## 客户端
 
@@ -100,17 +106,9 @@ iOS: ShadowRocket / Surge ，ShadowRocket 兼容 Surge 配置文件:
 
 自动生成配置文件 (Surge / Clash)，适用于以上全部客户端
 
-有两个版本:
-
-1. 大陆 IP 走直连，其余走代理。
-
-2. GFWList
-
 项目地址: [https://github.com/dodowhat/gfwrules](https://github.com/dodowhat/gfwrules)
 
 ## 参考资料
-
-[Acme.sh Documentation](https://github.com/acmesh-official/acme.sh)
 
 [科学上网-左耳朵](https://haoel.github.io/)
 
