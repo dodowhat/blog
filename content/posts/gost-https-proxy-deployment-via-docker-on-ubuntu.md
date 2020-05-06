@@ -18,7 +18,7 @@ VPS 初始化以及 Docker 安装参考这篇文章 [Ubuntu VPS 初始化设置 
 
 你需要有一个域名，并且将它解析到你的 VPS 上。
 
-## 使用 certbot 签发 Let's Encrypt 证书
+## 使用 Certbot 签发 Let's Encrypt 证书
 
 安装 certbot:
 
@@ -109,6 +109,8 @@ iOS: ShadowRocket / Surge ，ShadowRocket 兼容 Surge 配置文件:
 项目地址: [https://github.com/dodowhat/gfwrules](https://github.com/dodowhat/gfwrules)
 
 ## 参考资料
+
+[Certbot Doc](https://certbot.eff.org/lets-encrypt/ubuntubionic-other)
 
 [科学上网-左耳朵](https://haoel.github.io/)
 
