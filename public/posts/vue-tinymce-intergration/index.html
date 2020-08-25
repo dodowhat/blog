@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+
+
+<html lang="zh" data-theme="">
+<head>
+    
+        
+<meta charset="utf-8">
+<meta name="HandheldFriendly" content="True">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer-when-downgrade">
+
+<title>Vue 引入 TinyMCE 富文本编辑器 - FBI WARNING</title>
+<meta name="description" content="">
+
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon-precomposed" href="/favicon.png">
+
+<link rel="stylesheet" href="/css/light.css?rnd=1598362057" />
+<style>
+
+    [data-theme="dark"] {   
+        --font-color: #eee;
+--bg-color: #212121;
+
+--link-color:#599ada;
+--link-state-color:#ff5858;
+--link-state-border-color: rgba(238, 54, 54, 0.5);
+
+--thead-bg-color: #343a40;
+--table-border-color: lightgrey;
+
+--pre-color: #333;
+--pre-bg-color: #f1f1f1;
+
+--bq-color: #ccc;
+--hr-color: #333;
+
+--pagination-bg-color: #373737;
+--pagination-link-color: #b6b6b6;
+
+--post-info-color: grey;
+
+--switcher-color: #333;
+--switcher-bg-color: #fff;
+
+    }
+
+</style>
+
+<link rel="stylesheet" href="/css/style.css?rnd=1598362057" />
+
+
+
+
+
+<meta property="og:title" content="Vue 引入 TinyMCE 富文本编辑器" />
+<meta property="og:description" content="本项目基于 vue-cli 创建的项目实现。 将 TinyMCE 封装成一个 Vue Component，过程稍有些不优雅，因为官方提供的 tinymce-vue 功能不完善，不能直接使用。 准备工作 首先，通" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/vue-tinymce-intergration/" />
+<meta property="article:published_time" content="2020-05-07T14:44:38+08:00" />
+<meta property="article:modified_time" content="2020-05-07T14:44:38+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Vue 引入 TinyMCE 富文本编辑器"/>
+<meta name="twitter:description" content="本项目基于 vue-cli 创建的项目实现。 将 TinyMCE 封装成一个 Vue Component，过程稍有些不优雅，因为官方提供的 tinymce-vue 功能不完善，不能直接使用。 准备工作 首先，通"/>
+
+
+
+
+
+
+
+
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to main content</a>
+    <div class="container">
+        <header class="common-header"> 
+            
+                <h1 class="site-title">
+    <a href="/">FBI WARNING</a>
+</h1>
+<nav>
+    
+    
+</nav>
+
+            
+        </header>
+        <main id="main" tabindex="-1"> 
+            
+    
+    
+    <article class="post">
+        <header class="post-header">
+            <h1 class="post-title">Vue 引入 TinyMCE 富文本编辑器</h1>
+        </header>
+        <div class="content">
+            <p>本项目基于 <a href="https://github.com/vuejs/vue-cli">vue-cli</a> 创建的项目实现。</p>
+<p>将 TinyMCE 封装成一个 Vue Component，过程稍有些不优雅，因为官方提供的 tinymce-vue 功能不完善，不能直接使用。</p>
+<h2 id="准备工作">准备工作</h2>
+<p>首先，通过 npm 安装 tinymce 和 tinymce-vue</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ npm install --save tinymce
+$ npm install --save @tinymce/tinymce-vue
+</code></pre></div><p>接着，是不优雅的部分:</p>
+<ul>
+<li>
+<p>复制 <code>node_modules/tinymce/skins</code> 目录到 <code>public/</code> 和 <code>public/js/</code> 目录下</p>
+</li>
+<li>
+<p>访问 <a href="https://www.tiny.cloud/get-tiny/language-packages/">https://www.tiny.cloud/get-tiny/language-packages/</a>
+下载中文语言包，放入 <code>public/js/langs/</code> 目录下</p>
+</li>
+<li>
+<p>为项目根目录设置一个别名，方便引用语言包，编辑 <code>vue.config.js</code></p>
+</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> {
+  <span style="color:#a6e22e">configureWebpack</span><span style="color:#f92672">:</span> {
+    <span style="color:#a6e22e">resolve</span><span style="color:#f92672">:</span> {
+      <span style="color:#a6e22e">alias</span><span style="color:#f92672">:</span> {
+        <span style="color:#e6db74">&#39;~&#39;</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">resolve</span>(<span style="color:#e6db74">&#39;.&#39;</span>)
+      }
+    }
+  },
+}
+</code></pre></div><h2 id="创建-vue-组件">创建 Vue 组件</h2>
+<p>我将它命名为 <code>MyTinymce</code> 保存在 <code>src/components/MyTinymce/index.vue</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-vue" data-lang="vue">&lt;<span style="color:#f92672">template</span>&gt;
+  &lt;<span style="color:#f92672">tinymce-vue</span>
+    <span style="color:#a6e22e">v</span><span style="color:#f92672">-model</span><span style="color:#960050;background-color:#1e0010">=&#34;</span><span style="color:#a6e22e">content</span><span style="color:#960050;background-color:#1e0010">&#34;</span>
+    <span style="color:#f92672">:value</span><span style="color:#e6db74">=&#34;value&#34;</span>
+    <span style="color:#f92672">:init</span><span style="color:#e6db74">=&#34;init&#34;</span>
+    <span style="color:#960050;background-color:#1e0010">@</span><span style="color:#a6e22e">input</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;$emit(&#39;input&#39;, content)&#34;</span>
+  /&gt;
+&lt;/<span style="color:#f92672">template</span>&gt;
+
+&lt;<span style="color:#f92672">script</span>&gt;
+  <span style="color:#66d9ef">import</span> <span style="color:#a6e22e">TinymceVue</span> <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#39;@tinymce/tinymce-vue&#39;</span>
+  <span style="color:#66d9ef">import</span> <span style="color:#e6db74">&#39;tinymce/tinymce&#39;</span>
+  <span style="color:#75715e">// 加载皮肤
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">import</span> <span style="color:#e6db74">&#39;tinymce/themes/silver&#39;</span>
+  <span style="color:#75715e">// 加载语言包
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">import</span> <span style="color:#e6db74">&#39;~/public/js/langs/zh_CN.js&#39;</span>
+  <span style="color:#75715e">// 加载插件
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">import</span> <span style="color:#e6db74">&#39;tinymce/plugins/image&#39;</span>
+  <span style="color:#66d9ef">import</span> <span style="color:#e6db74">&#39;tinymce/plugins/imagetools&#39;</span>
+
+  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">plugins</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;image imagetools axupimgs&#39;</span>
+
+  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">toolbar</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;undo redo | fontsizeselect | forecolor backcolor | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | axupimgs&#39;</span>
+
+  <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">images_upload_handler</span>(<span style="color:#a6e22e">blobInfo</span>, <span style="color:#a6e22e">success</span>, <span style="color:#a6e22e">failure</span>) {
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">file</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">blobInfo</span>.<span style="color:#a6e22e">blob</span>()
+    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">file</span>.<span style="color:#a6e22e">size</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">1024</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">1024</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">2</span>) {
+      <span style="color:#a6e22e">failure</span>(<span style="color:#e6db74">&#39;请上传小于2M的图片&#39;</span>)
+      <span style="color:#66d9ef">return</span>
+    }
+    <span style="color:#75715e">// upload file ...
+</span><span style="color:#75715e"></span>  }
+
+  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">init</span> <span style="color:#f92672">=</span> {
+    <span style="color:#a6e22e">language</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;zh_CN&#39;</span>,
+    <span style="color:#a6e22e">plugins</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">plugins</span>,
+    <span style="color:#a6e22e">menubar</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span>,
+    <span style="color:#a6e22e">toolbar</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">toolbar</span>,
+    <span style="color:#a6e22e">images_upload_handler</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">images_upload_handler</span>,
+    <span style="color:#a6e22e">imagetools_cors_hosts</span><span style="color:#f92672">:</span> [<span style="color:#e6db74">&#39;example.com&#39;</span>], <span style="color:#75715e">//如果图片链接是跨域的，需要将图片域名写入这个参数
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">height</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">800</span>,
+    <span style="color:#a6e22e">branding</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span>
+  }
+
+  <span style="color:#66d9ef">export</span> <span style="color:#66d9ef">default</span> {
+    <span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;MyTinymce&#39;</span>,
+    <span style="color:#a6e22e">components</span><span style="color:#f92672">:</span> {
+      <span style="color:#a6e22e">TinymceVue</span>
+    },
+    <span style="color:#a6e22e">props</span><span style="color:#f92672">:</span> [<span style="color:#e6db74">&#39;value&#39;</span>],
+    <span style="color:#a6e22e">data</span>() {
+      <span style="color:#66d9ef">return</span> {
+        <span style="color:#a6e22e">content</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;&#39;</span>,
+        <span style="color:#a6e22e">init</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">init</span>
+      }
+    },
+    <span style="color:#a6e22e">mounted</span>() {
+      <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">content</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">value</span>
+    },
+    <span style="color:#a6e22e">watch</span><span style="color:#f92672">:</span> {
+      <span style="color:#a6e22e">value</span>(<span style="color:#a6e22e">val</span>) {
+        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">content</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">val</span>
+      }
+    }
+  }
+&lt;/<span style="color:#f92672">script</span>&gt;
+</code></pre></div><p>调用示例</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-vue" data-lang="vue">&lt;<span style="color:#f92672">my-tinymce</span> <span style="color:#a6e22e">v</span><span style="color:#f92672">-model</span><span style="color:#960050;background-color:#1e0010">=&#34;</span><span style="color:#a6e22e">article.content</span><span style="color:#960050;background-color:#1e0010">&#34;</span> /&gt;
+</code></pre></div><h2 id="总结">总结</h2>
+<p>本文主要实现了 TinyMCE 在 Vue 项目中的正常使用，后续可以将它打造成更灵活的基础组件。
+比如将 <code>init</code> 作为 <code>props</code> 参数由外部传入等等，这里就不展开了。</p>
+
+        </div>
+        
+
+
+<div class="post-info">
+    
+        <div class="post-date">2020-05-07</div>
+    
+    <div class="post-taxonomies">
+        
+            
+    </div>
+</div>
+
+    </article>
+
+    
+
+    
+
+
+        </main>
+        
+            <footer class="common-footer">
+    
+    
+
+     
+
+    <div class="common-footer-bottom">
+        <div class="copyright">
+            <p>© 2020<br>
+            Powered by <a target="_blank" rel="noopener noreferrer" href="https://gohugo.io/">Hugo</a>, theme <a target="_blank" rel="noopener noreferrer" href="https://github.com/mitrichius/hugo-theme-anubis">Anubis</a>.
+            </p>  
+        </div> 
+
+        
+
+
+   
+    </div>
+
+</footer>
+
+        
+    </div>
+</body>
+</html>

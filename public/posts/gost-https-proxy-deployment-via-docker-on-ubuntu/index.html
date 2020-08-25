@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+
+<html lang="zh" data-theme="">
+<head>
+    
+        
+<meta charset="utf-8">
+<meta name="HandheldFriendly" content="True">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer-when-downgrade">
+
+<title>部署 GOST HTTPS 代理 - FBI WARNING</title>
+<meta name="description" content="">
+
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon-precomposed" href="/favicon.png">
+
+<link rel="stylesheet" href="/css/light.css?rnd=1598362057" />
+<style>
+
+    [data-theme="dark"] {   
+        --font-color: #eee;
+--bg-color: #212121;
+
+--link-color:#599ada;
+--link-state-color:#ff5858;
+--link-state-border-color: rgba(238, 54, 54, 0.5);
+
+--thead-bg-color: #343a40;
+--table-border-color: lightgrey;
+
+--pre-color: #333;
+--pre-bg-color: #f1f1f1;
+
+--bq-color: #ccc;
+--hr-color: #333;
+
+--pagination-bg-color: #373737;
+--pagination-link-color: #b6b6b6;
+
+--post-info-color: grey;
+
+--switcher-color: #333;
+--switcher-bg-color: #fff;
+
+    }
+
+</style>
+
+<link rel="stylesheet" href="/css/style.css?rnd=1598362057" />
+
+
+
+
+
+<meta property="og:title" content="部署 GOST HTTPS 代理" />
+<meta property="og:description" content="目前 HTTPS 是比较稳一种协议。 GOST 是一个GO语言实现的代理工具，官网有详细介绍，链接在文章底部。 本文主要记录用 GOST 部署 HTTPS 代理服务的过程。 VPS 初始化以及 Docker" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/gost-https-proxy-deployment-via-docker-on-ubuntu/" />
+<meta property="article:published_time" content="2020-03-18T21:38:50+08:00" />
+<meta property="article:modified_time" content="2020-03-18T21:38:50+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="部署 GOST HTTPS 代理"/>
+<meta name="twitter:description" content="目前 HTTPS 是比较稳一种协议。 GOST 是一个GO语言实现的代理工具，官网有详细介绍，链接在文章底部。 本文主要记录用 GOST 部署 HTTPS 代理服务的过程。 VPS 初始化以及 Docker"/>
+
+
+
+
+
+
+
+
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to main content</a>
+    <div class="container">
+        <header class="common-header"> 
+            
+                <h1 class="site-title">
+    <a href="/">FBI WARNING</a>
+</h1>
+<nav>
+    
+    
+</nav>
+
+            
+        </header>
+        <main id="main" tabindex="-1"> 
+            
+    
+    
+    <article class="post">
+        <header class="post-header">
+            <h1 class="post-title">部署 GOST HTTPS 代理</h1>
+        </header>
+        <div class="content">
+            <p>目前 HTTPS 是比较稳一种协议。</p>
+<p>GOST 是一个GO语言实现的代理工具，官网有详细介绍，链接在文章底部。</p>
+<p>本文主要记录用 GOST 部署 HTTPS 代理服务的过程。</p>
+<hr>
+<p>VPS 初始化以及 Docker 安装参考这篇文章 <a href="/posts/ubuntu-server-initiation-and-docker-installation">Ubuntu VPS 初始化设置 + Docker安装</a></p>
+<h2 id="解析域名到-vps">解析域名到 VPS</h2>
+<p>你需要有一个域名，并且将它解析到你的 VPS 上。</p>
+<h2 id="使用-certbot-签发-lets-encrypt-证书">使用 Certbot 签发 Let&rsquo;s Encrypt 证书</h2>
+<p>安装 certbot:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo apt-get update
+$ sudo apt-get install software-properties-common
+$ sudo add-apt-repository universe
+$ sudo add-apt-repository ppa:certbot/certbot
+$ sudo apt-get update
+$ sudo apt-get install certbot
+</code></pre></div><p>签发证书:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo certbot certonly --standalone
+</code></pre></div><p>根据提示输入域名和邮箱</p>
+<p>证书默认生成在<code>/etc/letsencrypt/live/&lt;YOUR.DOMAIN.COM/&gt;</code>目录下</p>
+<h2 id="部署-gost-docker-镜像">部署 Gost Docker 镜像</h2>
+<p>创建启动脚本 gost.sh:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/bin/bash
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">## 下面的四个参数需要改成你的</span>
+domain<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;example.com&#34;</span>
+username<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;username&#34;</span>
+password<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;password&#34;</span>
+port<span style="color:#f92672">=</span><span style="color:#ae81ff">443</span>
+
+bind_ip<span style="color:#f92672">=</span>0.0.0.0
+cert_dir<span style="color:#f92672">=</span>/etc/letsencrypt/<span style="color:#e6db74">${</span>domain<span style="color:#e6db74">}</span>
+cert_file<span style="color:#f92672">=</span><span style="color:#e6db74">${</span>cert_dir<span style="color:#e6db74">}</span>/fullchain.pem
+key_file<span style="color:#f92672">=</span><span style="color:#e6db74">${</span>cert_dir<span style="color:#e6db74">}</span>/privkey.pem
+sudo docker run -d --name gost <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -v <span style="color:#e6db74">${</span>cert_dir<span style="color:#e6db74">}</span>:<span style="color:#e6db74">${</span>cert_dir<span style="color:#e6db74">}</span>:ro <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    --net<span style="color:#f92672">=</span>host ginuerzh/gost <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -L <span style="color:#e6db74">&#34;http2://</span><span style="color:#e6db74">${</span>username<span style="color:#e6db74">}</span><span style="color:#e6db74">:</span><span style="color:#e6db74">${</span>password<span style="color:#e6db74">}</span><span style="color:#e6db74">@</span><span style="color:#e6db74">${</span>bind_ip<span style="color:#e6db74">}</span><span style="color:#e6db74">:</span><span style="color:#e6db74">${</span>port<span style="color:#e6db74">}</span><span style="color:#e6db74">?cert=</span><span style="color:#e6db74">${</span>cert_file<span style="color:#e6db74">}</span><span style="color:#e6db74">&amp;key=</span><span style="color:#e6db74">${</span>key_file<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</code></pre></div><p>启动服务:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ chmod +x gost.sh
+$ ./gost.sh
+</code></pre></div><h2 id="证书自动更新">证书自动更新</h2>
+<p>证书会在90天后过期，我们建立一个cron job来自动更新证书:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo crontab -e
+</code></pre></div><p>写入如下内容:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span> * * /usr/bin/certbot renew --force-renewal
+<span style="color:#ae81ff">5</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span> * * /usr/bin/docker restart gost
+</code></pre></div><p>crontab格式说明:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">分<span style="color:#f92672">[</span>0-59<span style="color:#f92672">]</span> 时<span style="color:#f92672">[</span>0-23<span style="color:#f92672">]</span> 日<span style="color:#f92672">[</span>1-31<span style="color:#f92672">]</span> 月<span style="color:#f92672">[</span>1-12<span style="color:#f92672">]</span> 星期<span style="color:#f92672">[</span>0-7<span style="color:#f92672">]</span> 要执行的命令
+</code></pre></div><h2 id="客户端">客户端</h2>
+<p>PC: Clash for Windows，下载地址:</p>
+<ul>
+<li><a href="https://github.com/Fndroid/clash_for_windows_pkg/releases">Github Release</a></li>
+</ul>
+<p>Android:</p>
+<p>Clash for Android，下载地址:</p>
+<ul>
+<li>
+<p><a href="https://github.com/Kr328/ClashForAndroid/releases">Github Release</a></p>
+</li>
+<li>
+<p><a href="https://play.google.com/store/apps/details?id=com.github.kr328.clash">Google Play</a></p>
+</li>
+</ul>
+<p>Surfboard，兼容 Surge 配置文件，下载地址：</p>
+<ul>
+<li>
+<p><a href="https://apkpure.com/surfboard/com.getsurfboard">APK</a></p>
+</li>
+<li>
+<p><a href="https://play.google.com/store/apps/details?id=com.getsurfboard">Google Play</a></p>
+</li>
+</ul>
+<p>iOS: ShadowRocket / Surge ，ShadowRocket 兼容 Surge 配置文件:</p>
+<ul>
+<li>美区 Apple Store 搜索</li>
+</ul>
+<h2 id="分流规则">分流规则</h2>
+<p>自动生成配置文件 (Surge / Clash)，适用于以上全部客户端</p>
+<p>项目地址: <a href="https://github.com/dodowhat/gfwrules">https://github.com/dodowhat/gfwrules</a></p>
+<h2 id="参考资料">参考资料</h2>
+<p><a href="https://certbot.eff.org/lets-encrypt/ubuntubionic-other">Certbot Doc</a></p>
+<p><a href="https://haoel.github.io/">科学上网-左耳朵</a></p>
+<p><a href="https://docs.ginuerzh.xyz/gost/tls/">Gost 官方文档</a></p>
+<p><a href="https://github.com/Dreamacro/clash">Clash Manual</a></p>
+<p><a href="https://manual.nssurge.com/">Surge Manual</a></p>
+<p><a href="https://manual.getsurfboard.com/">Surfbloard 官网</a></p>
+
+        </div>
+        
+
+
+<div class="post-info">
+    
+        <div class="post-date">2020-03-18</div>
+    
+    <div class="post-taxonomies">
+        
+            
+    </div>
+</div>
+
+    </article>
+
+    
+
+    
+
+
+        </main>
+        
+            <footer class="common-footer">
+    
+    
+
+     
+
+    <div class="common-footer-bottom">
+        <div class="copyright">
+            <p>© 2020<br>
+            Powered by <a target="_blank" rel="noopener noreferrer" href="https://gohugo.io/">Hugo</a>, theme <a target="_blank" rel="noopener noreferrer" href="https://github.com/mitrichius/hugo-theme-anubis">Anubis</a>.
+            </p>  
+        </div> 
+
+        
+
+
+   
+    </div>
+
+</footer>
+
+        
+    </div>
+</body>
+</html>

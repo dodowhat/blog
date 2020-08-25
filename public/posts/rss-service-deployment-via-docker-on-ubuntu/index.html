@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+
+<html lang="zh" data-theme="">
+<head>
+    
+        
+<meta charset="utf-8">
+<meta name="HandheldFriendly" content="True">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer-when-downgrade">
+
+<title>自用 RSS 服务搭建 (Miniflux &#43; RSSHub) - FBI WARNING</title>
+<meta name="description" content="">
+
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon-precomposed" href="/favicon.png">
+
+<link rel="stylesheet" href="/css/light.css?rnd=1598362057" />
+<style>
+
+    [data-theme="dark"] {   
+        --font-color: #eee;
+--bg-color: #212121;
+
+--link-color:#599ada;
+--link-state-color:#ff5858;
+--link-state-border-color: rgba(238, 54, 54, 0.5);
+
+--thead-bg-color: #343a40;
+--table-border-color: lightgrey;
+
+--pre-color: #333;
+--pre-bg-color: #f1f1f1;
+
+--bq-color: #ccc;
+--hr-color: #333;
+
+--pagination-bg-color: #373737;
+--pagination-link-color: #b6b6b6;
+
+--post-info-color: grey;
+
+--switcher-color: #333;
+--switcher-bg-color: #fff;
+
+    }
+
+</style>
+
+<link rel="stylesheet" href="/css/style.css?rnd=1598362057" />
+
+
+
+
+
+<meta property="og:title" content="自用 RSS 服务搭建 (Miniflux &#43; RSSHub)" />
+<meta property="og:description" content="RSSHub 是一个开源易用的 RSS 生成器，可以给任何奇奇怪怪的内容生成 RSS 订阅源，官网有详细介绍，链接在文章底部。 Miniflux 是一个网页版 RSS 阅读器，简洁干净。 本文主要" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/rss-service-deployment-via-docker-on-ubuntu/" />
+<meta property="article:published_time" content="2020-03-19T00:00:31+08:00" />
+<meta property="article:modified_time" content="2020-03-19T00:00:31+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="自用 RSS 服务搭建 (Miniflux &#43; RSSHub)"/>
+<meta name="twitter:description" content="RSSHub 是一个开源易用的 RSS 生成器，可以给任何奇奇怪怪的内容生成 RSS 订阅源，官网有详细介绍，链接在文章底部。 Miniflux 是一个网页版 RSS 阅读器，简洁干净。 本文主要"/>
+
+
+
+
+
+
+
+
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to main content</a>
+    <div class="container">
+        <header class="common-header"> 
+            
+                <h1 class="site-title">
+    <a href="/">FBI WARNING</a>
+</h1>
+<nav>
+    
+    
+</nav>
+
+            
+        </header>
+        <main id="main" tabindex="-1"> 
+            
+    
+    
+    <article class="post">
+        <header class="post-header">
+            <h1 class="post-title">自用 RSS 服务搭建 (Miniflux &#43; RSSHub)</h1>
+        </header>
+        <div class="content">
+            <p>RSSHub 是一个开源易用的 RSS 生成器，可以给任何奇奇怪怪的内容生成 RSS 订阅源，官网有详细介绍，链接在文章底部。</p>
+<p>Miniflux 是一个网页版 RSS 阅读器，简洁干净。</p>
+<p>本文主要记录 Miniflux + RSSHub 的搭建过程。</p>
+<hr>
+<p>VPS 初始化以及 Docker 安装参考这篇文章 <a href="/posts/ubuntu-server-initiation-and-docker-installation">Ubuntu VPS 初始化设置 + Docker安装</a></p>
+<h2 id="部署-miniflux">部署 Miniflux</h2>
+<p>新建 Docker Compose 配置文件，保存为 <code>docker-compose-miniflux.yml</code> :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">version</span>: <span style="color:#e6db74">&#39;3&#39;</span>
+<span style="color:#66d9ef">services</span>:
+  <span style="color:#66d9ef">miniflux</span>:
+    <span style="color:#66d9ef">image</span>: miniflux/miniflux:latest
+    <span style="color:#66d9ef">ports</span>:
+      - <span style="color:#e6db74">&#34;8080:8080&#34;</span>
+    <span style="color:#66d9ef">depends_on</span>:
+      - db
+    <span style="color:#66d9ef">environment</span>:
+      - DATABASE_URL=postgres://miniflux:secret@db/miniflux?sslmode=disable
+  <span style="color:#66d9ef">db</span>:
+    <span style="color:#66d9ef">image</span>: postgres:latest
+    <span style="color:#66d9ef">environment</span>:
+      - POSTGRES_USER=miniflux
+      - POSTGRES_PASSWORD=secret
+    <span style="color:#66d9ef">volumes</span>:
+      - miniflux-db:/var/lib/postgresql/data
+<span style="color:#66d9ef">volumes</span>:
+  <span style="color:#66d9ef">miniflux-db</span>:
+</code></pre></div><p>启动服务:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo docker-compose -f docker-compose-miniflux.yml up -d db
+$ sudo docker-compose -f docker-compose-miniflux.yml up -d miniflux
+</code></pre></div><p>初始化数据库:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ docker-compose -f docker-compose-miniflux.yml exec miniflux /usr/bin/miniflux -migrate
+</code></pre></div><p>创建用户，根据提示输入用户名及密码:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ docker-compose -f docker-compose-miniflux.yml exec miniflux /usr/bin/miniflux -create-admin
+</code></pre></div><p>部署完成，现在可以访问 <code>http://your-vps-ip:8080</code> 使用了。</p>
+<h2 id="部署-rsshub">部署 RSSHub</h2>
+<p>下载官方 Docker Compose 配置，保存为 <code>docker-compose-rsshub.yml</code> :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ wget https://raw.githubusercontent.com/DIYgod/RSSHub/master/docker-compose.yml -o docker-compose-rsshub.yml
+</code></pre></div><p>创建 volume 持久化 Redis 缓存:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ docker volume create redis-data
+</code></pre></div><p>启动:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo docker-compose -f docker-compse-rsshub.yml up -d
+</code></pre></div><p>部署完成，现在可以访问 <code>http://your-vps-ip:1200</code> 使用了。</p>
+<h2 id="配置-nginx-端口转发使用域名访问">配置 Nginx 端口转发，使用域名访问</h2>
+<p>解析域名到你的 VPS ，假设域名分别为:</p>
+<pre><code>rss.example.com  # Miniflux
+rsshub.example.com  # RSSHub
+</code></pre>
+<p>安装 Nginx :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo apt install -y nginx
+</code></pre></div><p>先简单修改下默认配置:</p>
+<p>禁用 <code>IP</code> 直接访问，编辑 <code>/etc/nginx/site-available/default</code> ，注释掉 <code>location {}</code> ，接着写入:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-nginx" data-lang="nginx"><span style="color:#66d9ef">return</span> <span style="color:#ae81ff">404</span>;
+</code></pre></div><p>隐藏 <code>404</code> 页面版本号，编辑 <code>/etc/nginx/nginx.conf</code> ，在 <code>http {}</code> 中写入:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-nginx" data-lang="nginx"><span style="color:#66d9ef">server_tokens</span> <span style="color:#66d9ef">off</span>;
+</code></pre></div><p>配置端口转发及域名访问，新建配置文件 <code>/etc/nginx/site-available/rss.conf</code> :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-nginx" data-lang="nginx"><span style="color:#75715e"># Miniflux
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">server</span> {
+    <span style="color:#f92672">listen</span> <span style="color:#ae81ff">80</span>;
+    <span style="color:#f92672">server_name</span> <span style="color:#e6db74">rss.example.com</span>;
+    <span style="color:#f92672">index</span> <span style="color:#e6db74">index.html</span>;
+    <span style="color:#f92672">location</span> <span style="color:#e6db74">/</span> {
+        <span style="color:#f92672">proxy_pass</span> <span style="color:#e6db74">http://127.0.0.1:8080</span>;
+    }
+}
+
+<span style="color:#75715e"># RSSHub
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">server</span> {
+    <span style="color:#f92672">listen</span> <span style="color:#ae81ff">80</span>;
+    <span style="color:#f92672">server_name</span> <span style="color:#e6db74">rsshub.example.com</span>;
+    <span style="color:#f92672">index</span> <span style="color:#e6db74">index.html</span>;
+    <span style="color:#f92672">location</span> <span style="color:#e6db74">/</span> {
+        <span style="color:#f92672">proxy_pass</span> <span style="color:#e6db74">http://127.0.0.1:1200</span>;
+    }
+}
+</code></pre></div><p>启用配置:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo ln -s /etc/nginx/site-available/rss.conf /etc/ngxin/site-enabled/
+</code></pre></div><p>重启服务:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo nginx -s reload
+</code></pre></div><p>现在可以用域名访问了。</p>
+<h2 id="使用-certbot-签发-lets-encrypt-证书">使用 Certbot 签发 Let&rsquo;s Encrypt 证书</h2>
+<p>安装 certbot:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo apt-get update
+$ sudo apt-get install software-properties-common
+$ sudo add-apt-repository universe
+$ sudo add-apt-repository ppa:certbot/certbot
+$ sudo apt-get update
+$ sudo apt-get install certbot python3-certbot-nginx
+</code></pre></div><p>签发证书:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo certbot certonly --nginx
+</code></pre></div><p>根据提示输入域名和邮箱</p>
+<p>证书默认生成在<code>/etc/letsencrypt/live/&lt;YOUR.DOMAIN.COM/&gt;</code>目录下</p>
+<p>现在可以用 HTTPS 访问了。</p>
+<p>PS: 配置过程中的一个小插曲，<code>ssl_certificate</code> 要用 <code>fullchain.pem</code> ，不要用 <code>cert.pem</code> ，否则访问可能出现下面的错误:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">x509: certificate signed by unknown authority
+</code></pre></div><h2 id="配置-rsshub-用户认证">配置 RSSHub 用户认证</h2>
+<p>现在这个建好的 RSSHub 服务是公开的，可以被别人直接访问使用。</p>
+<p>我希望只给自己使用，不被白嫖，所以给它加上用户认证。</p>
+<p>RSSHub 自带 HTTP 基础认证功能，但只给少部分路由开启，不符合我的需求。</p>
+<p>这里我通过配置 Nginx 给所有路由加上 HTTP 基础认证。</p>
+<p>使用 <code>htpasswd</code> 工具创建用户认证密码文件:</p>
+<p>安装工具:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo apt install -y apache2-utils
+</code></pre></div><p>创建用户:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo htpasswd -c /etc/nginx/htpasswd user1
+</code></pre></div><p><code>user1</code> 是你想要的用户名，随便取，根据提示设定密码。</p>
+<p><code>-c</code> 参数表示新建密码文件，如果文件已存在，去掉这个参数。</p>
+<p>编辑 <code>/etc/nginx/site-available/rss.conf</code> ，找到 RSSHub 的 <code>location {}</code> 部分，修改为:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-nginx" data-lang="nginx"><span style="color:#66d9ef">location</span> <span style="color:#e6db74">/</span> {
+    <span style="color:#f92672">proxy_pass</span> <span style="color:#e6db74">http://127.0.0.1:1200</span>;
+    <span style="color:#f92672">auth_basic</span> <span style="color:#e6db74">&#34;Restricted</span> <span style="color:#e6db74">Content&#34;</span>;
+    <span style="color:#f92672">auth_basic_user_file</span> <span style="color:#e6db74">/etc/nginx/htpasswd</span>;
+}
+</code></pre></div><p>重启 Nginx:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo nginx -s reload
+</code></pre></div><p>RSSHub 用户认证配置好了。在 Miniflux 中新增订阅时，在 <code>高级选项</code> 中填写刚才的用户名密码就可以了。</p>
+<h2 id="移动端">移动端</h2>
+<p>Miniflux 是一个 PWA(Progressive web app) 应用，跨平台，响应式设计，在手机浏览器中也有很好的体验。</p>
+<p>在iOS 的 Safari 和 Android 的 Chrome 上你可以手机主界面上创建快捷方式，方便直接访问。</p>
+<p>也可以使用第三方客户端连接，前提是在 Miniflux 设置里开启 Fever API:</p>
+<p>Android 推荐 FeedMe:</p>
+<ul>
+<li><a href="https://play.google.com/store/apps/details?id=com.seazon.feedme">Google Play</a></li>
+</ul>
+<p>iOS 推荐 Reeder:</p>
+<ul>
+<li>在 Apple Store 中自行搜索</li>
+</ul>
+<h2 id="参考资料">参考资料</h2>
+<p><a href="https://miniflux.app/docs/installation.html#docker">Miniflux Manual</a></p>
+<p><a href="https://docs.rsshub.app/install/#docker-compose-bu-shu">RSSHub 官方文档</a></p>
+<p><a href="https://certbot.eff.org/">Certbot Documentation</a></p>
+<p><a href="http://nginx.org/en/docs/http/configuring_https_servers.html">Nginx Configuring HTTPS</a></p>
+<p><a href="https://www.nginx.com/blog/using-free-ssltls-certificates-from-lets-encrypt-with-nginx/">Using Let&rsquo;s Encrypt with Nginx</a></p>
+<p><a href="https://docs.nginx.com/nginx/admin-guide/security-controls/configuring-http-basic-authentication/">Nginx configuring HTTP Basic Authentication</a></p>
+<p><a href="https://github.com/matrix-org/matrix-federation-tester/issues/59">x509: certificate signed by unknown authority</a></p>
+
+        </div>
+        
+
+
+<div class="post-info">
+    
+        <div class="post-date">2020-03-19</div>
+    
+    <div class="post-taxonomies">
+        
+            
+    </div>
+</div>
+
+    </article>
+
+    
+
+    
+
+
+        </main>
+        
+            <footer class="common-footer">
+    
+    
+
+     
+
+    <div class="common-footer-bottom">
+        <div class="copyright">
+            <p>© 2020<br>
+            Powered by <a target="_blank" rel="noopener noreferrer" href="https://gohugo.io/">Hugo</a>, theme <a target="_blank" rel="noopener noreferrer" href="https://github.com/mitrichius/hugo-theme-anubis">Anubis</a>.
+            </p>  
+        </div> 
+
+        
+
+
+   
+    </div>
+
+</footer>
+
+        
+    </div>
+</body>
+</html>
