@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>FBI WARNING</title>
-    <link>/</link>
+    <link>/blog/</link>
     <description>FBI WARNING</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <lastBuildDate>Thu, 07 May 2020 14:44:38 +0800</lastBuildDate>
     
-    <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Vue 引入 TinyMCE 富文本编辑器</title>
-      <link>/posts/vue-tinymce-intergration/</link>
+      <link>/blog/posts/vue-tinymce-intergration/</link>
       <pubDate>Thu, 07 May 2020 14:44:38 +0800</pubDate>
       
-      <guid>/posts/vue-tinymce-intergration/</guid>
+      <guid>/blog/posts/vue-tinymce-intergration/</guid>
       <description>&lt;p&gt;本项目基于 &lt;a href=&#34;https://github.com/vuejs/vue-cli&#34;&gt;vue-cli&lt;/a&gt; 创建的项目实现。&lt;/p&gt;
 &lt;p&gt;将 TinyMCE 封装成一个 Vue Component，过程稍有些不优雅，因为官方提供的 tinymce-vue 功能不完善，不能直接使用。&lt;/p&gt;
 &lt;h2 id=&#34;准备工作&#34;&gt;准备工作&lt;/h2&gt;
@@ -123,15 +123,15 @@ $ npm install --save @tinymce/tinymce-vue
     
     <item>
       <title>自用 RSS 服务搭建 (Miniflux &#43; RSSHub)</title>
-      <link>/posts/rss-service-deployment-via-docker-on-ubuntu/</link>
+      <link>/blog/posts/rss-service-deployment-via-docker-on-ubuntu/</link>
       <pubDate>Thu, 19 Mar 2020 00:00:31 +0800</pubDate>
       
-      <guid>/posts/rss-service-deployment-via-docker-on-ubuntu/</guid>
+      <guid>/blog/posts/rss-service-deployment-via-docker-on-ubuntu/</guid>
       <description>&lt;p&gt;RSSHub 是一个开源易用的 RSS 生成器，可以给任何奇奇怪怪的内容生成 RSS 订阅源，官网有详细介绍，链接在文章底部。&lt;/p&gt;
 &lt;p&gt;Miniflux 是一个网页版 RSS 阅读器，简洁干净。&lt;/p&gt;
 &lt;p&gt;本文主要记录 Miniflux + RSSHub 的搭建过程。&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;VPS 初始化以及 Docker 安装参考这篇文章 &lt;a href=&#34;/posts/ubuntu-server-initiation-and-docker-installation&#34;&gt;Ubuntu VPS 初始化设置 + Docker安装&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;VPS 初始化以及 Docker 安装参考这篇文章 &lt;a href=&#34;/blog/posts/ubuntu-server-initiation-and-docker-installation&#34;&gt;Ubuntu VPS 初始化设置 + Docker安装&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;部署-miniflux&#34;&gt;部署 Miniflux&lt;/h2&gt;
 &lt;p&gt;新建 Docker Compose 配置文件，保存为 &lt;code&gt;docker-compose-miniflux.yml&lt;/code&gt; :&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;version&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;3&amp;#39;&lt;/span&gt;
@@ -267,15 +267,15 @@ $ sudo apt-get install certbot python3-certbot-nginx
     
     <item>
       <title>部署 GOST HTTPS 代理</title>
-      <link>/posts/gost-https-proxy-deployment-via-docker-on-ubuntu/</link>
+      <link>/blog/posts/gost-https-proxy-deployment-via-docker-on-ubuntu/</link>
       <pubDate>Wed, 18 Mar 2020 21:38:50 +0800</pubDate>
       
-      <guid>/posts/gost-https-proxy-deployment-via-docker-on-ubuntu/</guid>
+      <guid>/blog/posts/gost-https-proxy-deployment-via-docker-on-ubuntu/</guid>
       <description>&lt;p&gt;目前 HTTPS 是比较稳一种协议。&lt;/p&gt;
 &lt;p&gt;GOST 是一个GO语言实现的代理工具，官网有详细介绍，链接在文章底部。&lt;/p&gt;
 &lt;p&gt;本文主要记录用 GOST 部署 HTTPS 代理服务的过程。&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;VPS 初始化以及 Docker 安装参考这篇文章 &lt;a href=&#34;/posts/ubuntu-server-initiation-and-docker-installation&#34;&gt;Ubuntu VPS 初始化设置 + Docker安装&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;VPS 初始化以及 Docker 安装参考这篇文章 &lt;a href=&#34;/blog/posts/ubuntu-server-initiation-and-docker-installation&#34;&gt;Ubuntu VPS 初始化设置 + Docker安装&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;解析域名到-vps&#34;&gt;解析域名到 VPS&lt;/h2&gt;
 &lt;p&gt;你需要有一个域名，并且将它解析到你的 VPS 上。&lt;/p&gt;
 &lt;h2 id=&#34;使用-certbot-签发-lets-encrypt-证书&#34;&gt;使用 Certbot 签发 Let&amp;rsquo;s Encrypt 证书&lt;/h2&gt;
@@ -362,10 +362,10 @@ $ ./gost.sh
     
     <item>
       <title>Ubuntu Server 初始化设置 &#43; Docker 安装</title>
-      <link>/posts/ubuntu-server-initiation-and-docker-installation/</link>
+      <link>/blog/posts/ubuntu-server-initiation-and-docker-installation/</link>
       <pubDate>Tue, 17 Mar 2020 21:14:08 +0800</pubDate>
       
-      <guid>/posts/ubuntu-server-initiation-and-docker-installation/</guid>
+      <guid>/blog/posts/ubuntu-server-initiation-and-docker-installation/</guid>
       <description>&lt;p&gt;本文主要记录 Ubuntu Server 的一些初始化操作。&lt;/p&gt;
 &lt;p&gt;适用于本机、虚拟机、VPS 云主机等等创建后初次运行时参考，方便后续维护使用。&lt;/p&gt;
 &lt;p&gt;包括：新增普通权限用户、配置SSH密钥登录、Docker 安装。&lt;/p&gt;

@@ -3,41 +3,41 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/</loc>
+    <loc>/blog/</loc>
     <lastmod>2020-05-07T14:44:38+08:00</lastmod>
   </url>
   
   <url>
-    <loc>/posts/</loc>
+    <loc>/blog/posts/</loc>
     <lastmod>2020-05-07T14:44:38+08:00</lastmod>
   </url>
   
   <url>
-    <loc>/posts/vue-tinymce-intergration/</loc>
+    <loc>/blog/posts/vue-tinymce-intergration/</loc>
     <lastmod>2020-05-07T14:44:38+08:00</lastmod>
   </url>
   
   <url>
-    <loc>/posts/rss-service-deployment-via-docker-on-ubuntu/</loc>
+    <loc>/blog/posts/rss-service-deployment-via-docker-on-ubuntu/</loc>
     <lastmod>2020-03-19T00:00:31+08:00</lastmod>
   </url>
   
   <url>
-    <loc>/posts/gost-https-proxy-deployment-via-docker-on-ubuntu/</loc>
+    <loc>/blog/posts/gost-https-proxy-deployment-via-docker-on-ubuntu/</loc>
     <lastmod>2020-03-18T21:38:50+08:00</lastmod>
   </url>
   
   <url>
-    <loc>/posts/ubuntu-server-initiation-and-docker-installation/</loc>
+    <loc>/blog/posts/ubuntu-server-initiation-and-docker-installation/</loc>
     <lastmod>2020-03-17T21:14:08+08:00</lastmod>
   </url>
   
   <url>
-    <loc>/categories/</loc>
+    <loc>/blog/categories/</loc>
   </url>
   
   <url>
-    <loc>/tags/</loc>
+    <loc>/blog/tags/</loc>
   </url>
   
 </urlset>

@@ -1,4 +1,4 @@
-baseURL = "/"
+baseURL = "/blog"
 languageCode = "zh"
 title = "FBI WARNING"
 theme = "anubis"
