@@ -3,3 +3,4 @@ languageCode = "zh"
 title = "FBI WARNING"
 theme = "anubis"
 hasCJKLanguage = true
+publishDir = "docs"
