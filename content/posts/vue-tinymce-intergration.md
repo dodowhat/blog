@@ -12,8 +12,10 @@ draft: false
 
 首先，通过 npm 安装 tinymce 和 tinymce-vue
 
-    npm install --save tinymce
-    npm install --save @tinymce/tinymce-vue
+```bash
+$ npm install --save tinymce
+$ npm install --save @tinymce/tinymce-vue
+```
 
 接着，是不优雅的部分:
 
@@ -24,90 +26,96 @@ draft: false
 
 * 为项目根目录设置一个别名，方便引用语言包，编辑 `vue.config.js`
 
-    module.exports = {
-      configureWebpack: {
-        resolve: {
-          alias: {
-            '~': resolve('.')
-          }
-        }
-      },
+```js
+module.exports = {
+  configureWebpack: {
+    resolve: {
+      alias: {
+        '~': resolve('.')
+      }
     }
+  },
+}
+```
 
 ## 创建 Vue 组件
 
 我将它命名为 `MyTinymce` 保存在 `src/components/MyTinymce/index.vue`
 
-    <template>
-      <tinymce-vue
-        v-model="content"
-        :value="value"
-        :init="init"
-        @input="$emit('input', content)"
-      />
-    </template>
+```vue
+<template>
+  <tinymce-vue
+    v-model="content"
+    :value="value"
+    :init="init"
+    @input="$emit('input', content)"
+  />
+</template>
 
-    <script>
-      import TinymceVue from '@tinymce/tinymce-vue'
-      import 'tinymce/tinymce'
-      // 加载皮肤
-      import 'tinymce/themes/silver'
-      // 加载语言包
-      import '~/public/js/langs/zh_CN.js'
-      // 加载插件
-      import 'tinymce/plugins/image'
-      import 'tinymce/plugins/imagetools'
+<script>
+  import TinymceVue from '@tinymce/tinymce-vue'
+  import 'tinymce/tinymce'
+  // 加载皮肤
+  import 'tinymce/themes/silver'
+  // 加载语言包
+  import '~/public/js/langs/zh_CN.js'
+  // 加载插件
+  import 'tinymce/plugins/image'
+  import 'tinymce/plugins/imagetools'
 
-      const plugins = 'image imagetools axupimgs'
+  const plugins = 'image imagetools axupimgs'
 
-      const toolbar = 'undo redo | fontsizeselect | forecolor backcolor | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | axupimgs'
+  const toolbar = 'undo redo | fontsizeselect | forecolor backcolor | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | axupimgs'
 
-      function images_upload_handler(blobInfo, success, failure) {
-        const file = blobInfo.blob()
-        if (file.size / 1024 / 1024 > 2) {
-          failure('请上传小于2M的图片')
-          return
-        }
-        // upload file ...
+  function images_upload_handler(blobInfo, success, failure) {
+    const file = blobInfo.blob()
+    if (file.size / 1024 / 1024 > 2) {
+      failure('请上传小于2M的图片')
+      return
+    }
+    // upload file ...
+  }
+
+  const init = {
+    language: 'zh_CN',
+    plugins: plugins,
+    menubar: false,
+    toolbar: toolbar,
+    images_upload_handler: images_upload_handler,
+    imagetools_cors_hosts: ['example.com'], //如果图片链接是跨域的，需要将图片域名写入这个参数
+    height: 800,
+    branding: false
+  }
+
+  export default {
+    name: 'MyTinymce',
+    components: {
+      TinymceVue
+    },
+    props: ['value'],
+    data() {
+      return {
+        content: '',
+        init: init
       }
-
-      const init = {
-        language: 'zh_CN',
-        plugins: plugins,
-        menubar: false,
-        toolbar: toolbar,
-        images_upload_handler: images_upload_handler,
-        imagetools_cors_hosts: ['example.com'], //如果图片链接是跨域的，需要将图片域名写入这个参数
-        height: 800,
-        branding: false
+    },
+    mounted() {
+      this.content = this.value
+    },
+    watch: {
+      value(val) {
+        this.content = val
       }
-
-      export default {
-        name: 'MyTinymce',
-        components: {
-          TinymceVue
-        },
-        props: ['value'],
-        data() {
-          return {
-            content: '',
-            init: init
-          }
-        },
-        mounted() {
-          this.content = this.value
-        },
-        watch: {
-          value(val) {
-            this.content = val
-          }
-        }
-      }
-    </script>
+    }
+  }
+</script>
+```
 
 调用示例
 
-    <my-tinymce v-model="article.content" />
+```vue
+<my-tinymce v-model="article.content" />
+```
 
 ## 总结
 

@@ -18,38 +18,46 @@ VPS 初始化以及 Docker 安装参考这篇文章 [Ubuntu VPS 初始化设置 
 
 新建 Docker Compose 配置文件，保存为 `docker-compose-miniflux.yml` :
 
-    version: '3'
-    services:
-      miniflux:
-        image: miniflux/miniflux:latest
-        ports:
-          - "8080:8080"
-        depends_on:
-          - db
-        environment:
-          - DATABASE_URL=postgres://miniflux:secret@db/miniflux?sslmode=disable
-      db:
-        image: postgres:latest
-        environment:
-          - POSTGRES_USER=miniflux
-          - POSTGRES_PASSWORD=secret
-        volumes:
-          - miniflux-db:/var/lib/postgresql/data
+```yaml
+version: '3'
+services:
+  miniflux:
+    image: miniflux/miniflux:latest
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://miniflux:secret@db/miniflux?sslmode=disable
+  db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=miniflux
+      - POSTGRES_PASSWORD=secret
     volumes:
-      miniflux-db:
+      - miniflux-db:/var/lib/postgresql/data
+volumes:
+  miniflux-db:
+```
 
 启动服务:
 
-    $ sudo docker-compose -f docker-compose-miniflux.yml up -d db
-    $ sudo docker-compose -f docker-compose-miniflux.yml up -d miniflux
+```bash
+$ sudo docker-compose -f docker-compose-miniflux.yml up -d db
+$ sudo docker-compose -f docker-compose-miniflux.yml up -d miniflux
+```
 
 初始化数据库:
 
-    $ docker-compose -f docker-compose-miniflux.yml exec miniflux /usr/bin/miniflux -migrate
+```bash
+$ docker-compose -f docker-compose-miniflux.yml exec miniflux /usr/bin/miniflux -migrate
+```
 
 创建用户，根据提示输入用户名及密码:
 
-    $ docker-compose -f docker-compose-miniflux.yml exec miniflux /usr/bin/miniflux -create-admin
+```bash
+$ docker-compose -f docker-compose-miniflux.yml exec miniflux /usr/bin/miniflux -create-admin
+```
 
 部署完成，现在可以访问 `http://your-vps-ip:8080` 使用了。
 
@@ -57,15 +65,21 @@ VPS 初始化以及 Docker 安装参考这篇文章 [Ubuntu VPS 初始化设置 
 
 下载官方 Docker Compose 配置，保存为 `docker-compose-rsshub.yml` :
 
-    $ wget https://raw.githubusercontent.com/DIYgod/RSSHub/master/docker-compose.yml -o docker-compose-rsshub.yml
+```bash
+$ wget https://raw.githubusercontent.com/DIYgod/RSSHub/master/docker-compose.yml -o docker-compose-rsshub.yml
+```
 
 创建 volume 持久化 Redis 缓存:
 
-    $ docker volume create redis-data
+```bash
+$ docker volume create redis-data
+```
 
 启动:
 
-    $ sudo docker-compose -f docker-compse-rsshub.yml up -d
+```bash
+$ sudo docker-compose -f docker-compse-rsshub.yml up -d
+```
 
 部署完成，现在可以访问 `http://your-vps-ip:1200` 使用了。
 
@@ -78,126 +92,92 @@ VPS 初始化以及 Docker 安装参考这篇文章 [Ubuntu VPS 初始化设置 
 
 安装 Nginx :
 
-    $ sudo apt install -y nginx
+```bash
+$ sudo apt install -y nginx
+```
 
 先简单修改下默认配置:
 
 禁用 `IP` 直接访问，编辑 `/etc/nginx/site-available/default` ，注释掉 `location {}` ，接着写入:
 
-    return 404;
+```nginx
+return 404;
+```
 
 隐藏 `404` 页面版本号，编辑 `/etc/nginx/nginx.conf` ，在 `http {}` 中写入:
 
-    server_tokens off;
+```nginx
+server_tokens off;
+```
 
 配置端口转发及域名访问，新建配置文件 `/etc/nginx/site-available/rss.conf` :
 
-    # Miniflux
-    server {
-        listen 80;
-        server_name rss.example.com;
-        index index.html;
-        location / {
-            proxy_pass http://127.0.0.1:8080;
-        }
+```nginx
+# Miniflux
+server {
+    listen 80;
+    server_name rss.example.com;
+    index index.html;
+    location / {
+        proxy_pass http://127.0.0.1:8080;
     }
+}
 
-    # RSSHub
-    server {
-        listen 80;
-        server_name rsshub.example.com;
-        index index.html;
-        location / {
-            proxy_pass http://127.0.0.1:1200;
-        }
+# RSSHub
+server {
+    listen 80;
+    server_name rsshub.example.com;
+    index index.html;
+    location / {
+        proxy_pass http://127.0.0.1:1200;
     }
+}
+```
 
 启用配置:
 
-    $ sudo ln -s /etc/nginx/site-available/rss.conf /etc/ngxin/site-enabled/
+```bash
+$ sudo ln -s /etc/nginx/site-available/rss.conf /etc/ngxin/site-enabled/
+```
 
 重启服务:
 
-    $ sudo nginx -s reload
+```bash
+$ sudo nginx -s reload
+```
 
 现在可以用域名访问了。
 
-## 使用 acme.sh 签发 Let's Encrypt 证书
+## 使用 Certbot 签发 Let's Encrypt 证书
 
-以 root 身份安装 acme.sh:
+安装 certbot:
 
-    $ sudo su -
-    # apt install -y socat
-    # curl https://get.acme.sh | sh
-    # source ~/.bashrc
+```bash
+$ sudo apt-get update
+$ sudo apt-get install software-properties-common
+$ sudo add-apt-repository universe
+$ sudo add-apt-repository ppa:certbot/certbot
+$ sudo apt-get update
+$ sudo apt-get install certbot python3-certbot-nginx
+```
 
 签发证书:
 
-    # acme.sh --issue --nginx -d rss.example.com
-    # mkdir ~/rss.example.com
-    # acme.sh --install-cert -d rss.example.com \
-      --fullchain-file ~/rss.example.com/fullchain.pem \
-      --key-file ~/rss.example.com/key.pem
-      --reloadcmd "service nginx force-reload"
+```bash
+$ sudo certbot certonly --nginx
+```
 
-    # acme.sh --issue --nginx -d rsshub.example.com
-    # mkdir ~/rsshub.example.com
-    # acme.sh --install-cert -d rsshub.example.com \
-      --fullchain-file ~/rsshub.example.com/fullchain.pem \
-      --key-file ~/rsshub.example.com/key.pem
-      --reloadcmd "service nginx force-reload"
+根据提示输入域名和邮箱
 
-配置 Nginx HTTPS，编辑 `/etc/nginx/site-available/rss.conf` :
-
-    # Miniflux
-    server {
-        listen 80;
-        server_name rss.example.com;
-
-        listen 443 ssl;
-
-        ssl_certificate /root/rss.http-404.com/fullchain.pem;
-        ssl_certificate_key /root/rss.http-404.com/key.pem;
-        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-        ssl_ciphers HIGH:!aNULL:!MD5;
-
-        if ($scheme != "https") {
-          return 301 https://$host$request_uri;
-        }
-
-        index index.html;
-        location / {
-            proxy_pass http://127.0.0.1:8080;
-        }
-    }
-
-    # RSSHub
-    server {
-        listen 80;
-        server_name rsshub.example.com;
-
-        listen 443 ssl;
-
-        ssl_certificate /root/rsshub.http-404.com/fullchain.pem;
-        ssl_certificate_key /root/rsshub.http-404.com/key.pem;
-        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-        ssl_ciphers HIGH:!aNULL:!MD5;
-
-        if ($scheme != "https") {
-            return 301 https://$host$request_uri;
-        }
-
-        index index.html;
-        location / {
-            proxy_pass http://127.0.0.1:1200;
-        }
-    }
+证书默认生成在`/etc/letsencrypt/live/<YOUR.DOMAIN.COM/>`目录下
 
 现在可以用 HTTPS 访问了。
 
 PS: 配置过程中的一个小插曲，`ssl_certificate` 要用 `fullchain.pem` ，不要用 `cert.pem` ，否则访问可能出现下面的错误:
 
-    x509: certificate signed by unknown authority
+```bash
+x509: certificate signed by unknown authority
+```
 
 ## 配置 RSSHub 用户认证
 
@@ -213,11 +193,15 @@ RSSHub 自带 HTTP 基础认证功能，但只给少部分路由开启，不符�
 
 安装工具:
 
-    $ sudo apt install -y apache2-utils
+```bash
+$ sudo apt install -y apache2-utils
+```
 
 创建用户:
 
-    $ sudo htpasswd -c /etc/nginx/htpasswd user1
+```bash
+$ sudo htpasswd -c /etc/nginx/htpasswd user1
+```
 
 `user1` 是你想要的用户名，随便取，根据提示设定密码。
 
@@ -225,15 +209,19 @@ RSSHub 自带 HTTP 基础认证功能，但只给少部分路由开启，不符�
 
 编辑 `/etc/nginx/site-available/rss.conf` ，找到 RSSHub 的 `location {}` 部分，修改为: 
 
-    location / {
-        proxy_pass http://127.0.0.1:1200;
-        auth_basic "Restricted Content";
-        auth_basic_user_file /etc/nginx/htpasswd;
-    }
+```nginx
+location / {
+    proxy_pass http://127.0.0.1:1200;
+    auth_basic "Restricted Content";
+    auth_basic_user_file /etc/nginx/htpasswd;
+}
+```
 
 重启 Nginx:
 
-    sudo nginx -s reload
+```bash
+$ sudo nginx -s reload
+```
 
 RSSHub 用户认证配置好了。在 Miniflux 中新增订阅时，在 `高级选项` 中填写刚才的用户名密码就可以了。
 
@@ -259,7 +247,7 @@ iOS 推荐 Reeder:
 
 [RSSHub 官方文档](https://docs.rsshub.app/install/#docker-compose-bu-shu)
 
-[Acme.sh Documentation](https://github.com/acmesh-official/acme.sh)
+[Certbot Documentation](https://certbot.eff.org/)
 
 [Nginx Configuring HTTPS](http://nginx.org/en/docs/http/configuring_https_servers.html)
 

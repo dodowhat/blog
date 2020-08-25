@@ -22,16 +22,20 @@ VPS 初始化以及 Docker 安装参考这篇文章 [Ubuntu VPS 初始化设置 
 
 安装 certbot:
 
-    $ sudo apt-get update
-    $ sudo apt-get install software-properties-common
-    $ sudo add-apt-repository universe
-    $ sudo add-apt-repository ppa:certbot/certbot
-    $ sudo apt-get update
-    $ sudo apt-get install certbot
+```bash
+$ sudo apt-get update
+$ sudo apt-get install software-properties-common
+$ sudo add-apt-repository universe
+$ sudo add-apt-repository ppa:certbot/certbot
+$ sudo apt-get update
+$ sudo apt-get install certbot
+```
 
 签发证书:
 
-    $ sudo certbot certonly --standalone
+```bash
+$ sudo certbot certonly --standalone
+```
 
 根据提示输入域名和邮箱
 
@@ -41,42 +45,52 @@ VPS 初始化以及 Docker 安装参考这篇文章 [Ubuntu VPS 初始化设置 
 
 创建启动脚本 gost.sh:
 
-    #!/bin/bash
+```bash
+#!/bin/bash
 
-    ## 下面的四个参数需要改成你的
-    domain="example.com"
-    username="username"
-    password="password"
-    port=443
+## 下面的四个参数需要改成你的
+domain="example.com"
+username="username"
+password="password"
+port=443
 
-    bind_ip=0.0.0.0
-    cert_dir=/etc/letsencrypt/${domain}
-    cert_file=${cert_dir}/fullchain.pem
-    key_file=${cert_dir}/privkey.pem
-    sudo docker run -d --name gost \
-        -v ${cert_dir}:${cert_dir}:ro \
-        --net=host ginuerzh/gost \
-        -L "http2://${username}:${password}@${bind_ip}:${port}?cert=${cert_file}&key=${key_file}"
+bind_ip=0.0.0.0
+cert_dir=/etc/letsencrypt/${domain}
+cert_file=${cert_dir}/fullchain.pem
+key_file=${cert_dir}/privkey.pem
+sudo docker run -d --name gost \
+    -v ${cert_dir}:${cert_dir}:ro \
+    --net=host ginuerzh/gost \
+    -L "http2://${username}:${password}@${bind_ip}:${port}?cert=${cert_file}&key=${key_file}"
+```
 
 启动服务:
 
-    $ chmod +x gost.sh
-    $ ./gost.sh
+```bash
+$ chmod +x gost.sh
+$ ./gost.sh
+```
 
 ## 证书自动更新
 
 证书会在90天后过期，我们建立一个cron job来自动更新证书:
 
-    $ sudo crontab -e
+```bash
+$ sudo crontab -e
+```
 
 写入如下内容:
 
-    0 0 1 * * /usr/bin/certbot renew --force-renewal
-    5 0 1 * * /usr/bin/docker restart gost
+```bash
+0 0 1 * * /usr/bin/certbot renew --force-renewal
+5 0 1 * * /usr/bin/docker restart gost
+```
 
 crontab格式说明:
 
-    分[0-59] 时[0-23] 日[1-31] 月[1-12] 星期[0-7] 要执行的命令
+```bash
+分[0-59] 时[0-23] 日[1-31] 月[1-12] 星期[0-7] 要执行的命令
+```
 
 ## 客户端
 

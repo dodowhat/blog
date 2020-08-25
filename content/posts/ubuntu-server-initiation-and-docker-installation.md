@@ -22,44 +22,62 @@ draft: false
 
 ## 更新系统:
 
-    root# apt update && sudo apt upgrade -y
+```cmd
+# apt update && sudo apt upgrade -y
+```
 
 ## 新增普通用户:
 
-    root# adduser user1
+```cmd
+# adduser user1
+```
 
 为新用户配置sudo:
 
-    root# update-alternatives --config editor # 变更默认文本编辑器(非必要步骤)
-    root# visudo
+```cmd
+# update-alternatives --config editor # 变更默认文本编辑器(非必要步骤)
+# visudo
+```
 
 添加新行:
 
-    user1 ALL=(ALL) NOPASSWD: ALL
+```cmd
+user1 ALL=(ALL) NOPASSWD: ALL
+```
 
 切换至新用户:
 
-    root# su - user1
+```cmd
+# su - user1
+```
 
 导入SSH密钥:
 
-    $ mkdir ~/.ssh
-    $ vim ~/.ssh/authorized_keys  # 写入公钥，格式(单行)：ssh-rsa your_public_key
-    $ chmod 700 ~/.ssh
-    $ chmod 644 ~/.ssh/authorized_keys
+```bash
+$ mkdir ~/.ssh
+$ vim ~/.ssh/authorized_keys  # 写入公钥，格式(单行)：ssh-rsa your_public_key
+$ chmod 700 ~/.ssh
+$ chmod 644 ~/.ssh/authorized_keys
+```
 
 更新SSH配置，禁用root远程登录以及密码登录:
 
-    $ sudo vim /etc/ssh/sshd_config
+```bash
+$ sudo vim /etc/ssh/sshd_config
+```
 
 找到以下内容并在行首加#号注释掉:
 
-    PermitRootLogin yes  # 允许root远程登录
-    PasswordAuthentication yes  # 允许密码登录
+```bash
+PermitRootLogin yes  # 允许root远程登录
+PasswordAuthentication yes  # 允许密码登录
+```
 
 重启SSH服务:
 
-    $ sudo systemctl restart ssh
+```bash
+$ sudo systemctl restart ssh
+```
 
 ## 配置Putty
 
@@ -71,49 +89,61 @@ Connection -> Seconds between keepalives 设为60，防止超时卡死。
 
 踢掉某用户:
 
-    $ sudo pkill -kill -t pts/0  # pts/0是w命令输出的TTY列的值
+```bash
+$ sudo pkill -kill -t pts/0  # pts/0是w命令输出的TTY列的值
+```
 
 ## 安装 Docker
 
 准备工作:
 
-    $ sudo apt-get update
-    $ sudo apt-get install -y \
-        apt-transport-https \
-        ca-certificates \
-        curl \
-        gnupg-agent \
-        software-properties-common
+```bash
+$ sudo apt-get update
+$ sudo apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg-agent \
+    software-properties-common
+```
 
 添加软件源(二选一):
 
-    # 官方源
-    $ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-    $ sudo add-apt-repository \
-       "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-       $(lsb_release -cs) \
-       stable"
+```bash
+# 官方源
+$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+$ sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
 
-    # 国内源
-    $ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-    $ sudo add-apt-repository \
-       "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-       $(lsb_release -cs) \
-       stable"
+# 国内源
+$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+$ sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+```
 
 安装:
 
-    $ sudo apt-get update
-    $ sudo apt-get install -y docker-ce
+```bash
+$ sudo apt-get update
+$ sudo apt-get install -y docker-ce
+```
 
 如果想要以普通用户使用 Docker，就将用户加入docker组:
 
-    $ sudo usermod -aG docker user1
+```bash
+$ sudo usermod -aG docker user1
+```
 
 安装 `docker-compose` :
 
-    $ sudo curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    $ sudo chmod +x /usr/local/bin/docker-compose
+```bash
+$ sudo curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+$ sudo chmod +x /usr/local/bin/docker-compose
+```
 
 参考资料:
 
