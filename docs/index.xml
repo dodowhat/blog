@@ -54,7 +54,7 @@ $ chmod u+x clash
 &lt;blockquote&gt;
 &lt;p&gt;利用 nohup 命令以及其它进程管理命令实现后台运行&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;就我个人而言，前两种方式对于 Clash 这样的轻量级服务来说有些过于厚重了，所以我选择第三种方式。&lt;/p&gt;
+&lt;p&gt;个人不喜欢前两种方式，所以选择第三种方式。&lt;/p&gt;
 &lt;p&gt;启动服务脚本 start.sh&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/bash
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
