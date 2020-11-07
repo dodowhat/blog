@@ -4,7 +4,7 @@ date: 2020-11-06T20:45:17+08:00
 draft: false
 ---
 
-Clash 是一款支持多种协议的代理客户端，在 Windows 以及 MacOS 上均有图形化版本，然而 Linux 上没有 (我猜是因为 Linux 桌面环境过于驳杂且用户少不值得开发)。
+Clash 是一款支持多种协议的代理客户端，在 Windows 以及 MacOS 上均有图形化版本，然而 Linux 上没有。
 
 好在 Clash 提供了用于管理服务的 RESTful API ，并且作者开发了配套的 Web 版管理面板，其他人也可以根据 API 开发自己的管理面板。
 
