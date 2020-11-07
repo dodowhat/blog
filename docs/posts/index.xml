@@ -1,15 +1,195 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on FBI WARNING</title>
+    <title>Posts on 纸上谈兵</title>
     <link>/blog/posts/</link>
-    <description>FBI WARNING (Posts)</description>
+    <description>纸上谈兵 (Posts)</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Thu, 07 May 2020 14:44:38 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 06 Nov 2020 20:45:17 +0800</lastBuildDate>
     
     <atom:link href="/blog/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Linux 系统 Clash 服务管理</title>
+      <link>/blog/posts/clash-service-management-on-linux/</link>
+      <pubDate>Fri, 06 Nov 2020 20:45:17 +0800</pubDate>
+      
+      <guid>/blog/posts/clash-service-management-on-linux/</guid>
+      <description>&lt;p&gt;Clash 是一款支持多种协议的代理客户端，在 Windows 以及 MacOS 上均有图形化版本，然而 Linux 上没有 (我猜是因为 Linux 桌面环境过于驳杂且用户少不值得开发)。&lt;/p&gt;
+&lt;p&gt;好在 Clash 提供了用于管理服务的 RESTful API ，并且作者开发了配套的 Web 版管理面板，其他人也可以根据 API 开发自己的管理面板。&lt;/p&gt;
+&lt;p&gt;本文记录了如何在 Linux 系统上丝滑地使用 Clash 服务。&lt;/p&gt;
+&lt;h2 id=&#34;准备工作&#34;&gt;准备工作&lt;/h2&gt;
+&lt;p&gt;访问 &lt;a href=&#34;https://github.com/Dreamacro/clash/releases&#34;&gt;Clash Github Releases&lt;/a&gt;，找到适合自己硬件架构的版本，一般为 clash-linux-amd64。&lt;/p&gt;
+&lt;p&gt;命令行操作：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 创建一个工作目录&lt;/span&gt;
+$ mkdir clash-linux-management-tools
+$ cd clash-linux-management-tools
+&lt;span style=&#34;color:#75715e&#34;&gt;# 下载&lt;/span&gt;
+$ wget https://github.com/Dreamacro/clash/releases/download/v1.2.0/clash-linux-amd64-v1.2.0.gz
+&lt;span style=&#34;color:#75715e&#34;&gt;# 解压&lt;/span&gt;
+$ gzip -d clash-linux-amd64-v1.2.0.gz
+&lt;span style=&#34;color:#75715e&#34;&gt;# 解压出来程序的文件名带有平台、版本等信息，重命名为 clash 方便执行&lt;/span&gt;
+$ mv clash-linux-amd64-v1.2.0 clash
+&lt;span style=&#34;color:#75715e&#34;&gt;# 赋予程序可执行权限&lt;/span&gt;
+$ chmod u+x clash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;后台运行&#34;&gt;后台运行&lt;/h2&gt;
+&lt;p&gt;Clash 本身不提供后台服务运行的功能，需要用户自己想办法，大致有三种实现方式：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Systemd&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;通过创建 Systemd 配置文件将 Clash 纳入系统进程管理&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;第三方进程管理工具&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;常见的有：&lt;a href=&#34;https://pm2.keymetrics.io/&#34;&gt;pm2&lt;/a&gt; &lt;a href=&#34;https://nodemon.io/&#34;&gt;nodemon&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;Shell 命令&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;利用 nohup 命令以及其它进程管理命令实现后台运行&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;就我个人而言，前两种方式对于 Clash 这样的轻量级服务来说有些过于厚重了，所以我选择第三种方式。&lt;/p&gt;
+&lt;p&gt;启动服务脚本 start.sh&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/bash
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# 检测并结束正在运行的 Clash 服务，下面会讲到&lt;/span&gt;
+./stop.sh
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 启动服务&lt;/span&gt;
+nohup ./clash -d . &amp;gt; /dev/null 2&amp;gt;&amp;amp;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;启动命令有三部分，简单说明一下&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;nohup&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;这个命令可以让你执行的程序忽略“挂起”信号。
+也就是说假如你通过它运行了某个程序，然后关掉了终端窗口，这个程序依旧会在系统里运行。
+使用方法为在你执行的命令最前面加上 nohup 就可以了。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;./clash -d .&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;这是普通方式启动 Clash 的命令。
+-d 参数可以指定配置文件所在的目录，这里我指定为当前所在目录，所以写一个 . 就可以了。
+特别说明一下配置文件名称必须为 config.yaml，否则程序不会识别。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&amp;gt; /dev/null 2&amp;gt;&amp;amp;1 &amp;amp;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;这部分用一句话概括就是“保持静默地在后台运行”，在搜索 nohup 相关资料时应该会有提及，这里就不赘述了。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;结束服务脚本 stop.sh&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/bash
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# 查找 clash 服务的进程ID&lt;/span&gt;
+PID&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;$(&lt;/span&gt;pidof clash&lt;span style=&#34;color:#66d9ef&#34;&gt;)&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt; ! -z &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;$PID&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;; &lt;span style=&#34;color:#66d9ef&#34;&gt;then&lt;/span&gt;
+    &lt;span style=&#34;color:#75715e&#34;&gt;# 根据进程ID结束进程&lt;/span&gt;
+    kill -9 $PID
+&lt;span style=&#34;color:#66d9ef&#34;&gt;fi&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;好了，现在就可以通过脚来启动或结束服务了。&lt;/p&gt;
+&lt;p&gt;接下来看如何管理“机场”订阅的配置文件。&lt;/p&gt;
+&lt;h2 id=&#34;订阅配置管理&#34;&gt;订阅配置管理&lt;/h2&gt;
+&lt;p&gt;如今网络上有很多提供代理服务的商家 (俗称“机场”)，订阅之后会向你提供一个链接用来下载配置文件。&lt;/p&gt;
+&lt;p&gt;图形化版本的 Clash 可以很方便地通过鼠标点点点来管理这些订阅配置，那么如何通过命令行来做到这些呢？&lt;/p&gt;
+&lt;p&gt;首先我们创建一个目录，用来存放下载后的订阅配置文件&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ mkdir configs
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;接着创建订阅配置管理脚本，假如某“机场”名叫 &amp;ldquo;abc&amp;rdquo; ，创建 abc.sh (名字可以随便起)&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/bash
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# 这里填你的订阅链接&lt;/span&gt;
+URL&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://abc.xyz/user123/clash&amp;#34;&lt;/span&gt;
+
+FILENAME&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;configs/&lt;span style=&#34;color:#66d9ef&#34;&gt;$(&lt;/span&gt;basename $0 .sh&lt;span style=&#34;color:#66d9ef&#34;&gt;)&lt;/span&gt;.yaml
+
+curl -L &lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;URL&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt; &amp;gt; &lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;FILENAME&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt; $? -eq &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;; &lt;span style=&#34;color:#66d9ef&#34;&gt;then&lt;/span&gt;
+    cp &lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;FILENAME&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt; config.yaml
+&lt;span style=&#34;color:#66d9ef&#34;&gt;fi&lt;/span&gt;;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;执行这个脚本后会在 configs 目录下生成 abc.yaml (与脚本名称自动保持一致) 并且覆盖到 config.yaml 作为默认配置。&lt;/p&gt;
+&lt;p&gt;如果你还有其它的订阅链接，将这份脚本复制一份，改个文件名 (比如 def.sh)，再修改里面的 URL 就可以使用了。&lt;/p&gt;
+&lt;h2 id=&#34;半场总结&#34;&gt;半场总结&lt;/h2&gt;
+&lt;p&gt;现在我们回顾一下当前工作目录的文件结构&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;|clash-linux-management-tools
+    |---- clash          解压并重命名的 clash 本体
+    |---- config.yaml    默认配置文件
+    |---- start.sh       启动/重启脚本
+    |---- stop.sh        结束运行脚本
+    |---- abc.sh         abc订阅更新脚本
+    |---- def.sh         def订阅更新脚本
+    |==== configs        订阅配置下载目录
+        |---- abc.yaml   下载的abc订阅配置
+        |---- def.yaml   下载的def订阅配置
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;接下来部署 Web 管理面板。&lt;/p&gt;
+&lt;h2 id=&#34;部署-web-管理面板&#34;&gt;部署 Web 管理面板&lt;/h2&gt;
+&lt;p&gt;Web 管理面板有两个版本&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/Dreamacro/clash-dashboard&#34;&gt;clash-dashboard&lt;/a&gt; 由 Clash 作者开发&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/haishanh/yacd&#34;&gt;yacd&lt;/a&gt; 由第三方作者开发&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;两个项目的 gh-pages 分支均为编译好的成品，可直接部署使用。&lt;/p&gt;
+&lt;p&gt;以 yacd 为例，clone 项目，切换分支&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ git clone https://github.com/haishanh/yacd ~/yacd
+$ cd ~/yacd
+$ git fetch
+$ git checkout gh-pages
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;安装 Nginx (以 Ubuntu 系统为例)&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ sudo apt install nginx
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;创建配置 /etc/nginx/sites-available/yacd.conf&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-nginx&#34; data-lang=&#34;nginx&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;server&lt;/span&gt; {
+	&lt;span style=&#34;color:#f92672&#34;&gt;listen&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;9090&lt;/span&gt;;
+
+	&lt;span style=&#34;color:#f92672&#34;&gt;server_name&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;_&lt;/span&gt;;
+
+	&lt;span style=&#34;color:#f92672&#34;&gt;root&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;/home/xxx/yacd&lt;/span&gt;;
+	&lt;span style=&#34;color:#f92672&#34;&gt;index&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;index.html&lt;/span&gt;;
+
+	&lt;span style=&#34;color:#f92672&#34;&gt;location&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;/&lt;/span&gt; {
+		&lt;span style=&#34;color:#f92672&#34;&gt;try_files&lt;/span&gt; $uri $uri/ =&lt;span style=&#34;color:#ae81ff&#34;&gt;404&lt;/span&gt;;
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;启用配置，启动服务&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ sudo ln -s /etc/nginx/sites-available/yacd.conf /etc/nginx/sites-enabled/
+$ sudo nginx
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后就可以访问 http://localhost:9090 使用了&lt;/p&gt;
+&lt;h2 id=&#34;订阅更新脚本在-wsl2-上的一些调整&#34;&gt;订阅更新脚本在 WSL2 上的一些调整&lt;/h2&gt;
+&lt;p&gt;由于 WSL2 无法访问 Windows 10 宿主系统的服务，无法连接运行在宿主系统上的 Windows 版本 Clash ，
+所以要单独运行自己的 Clash 服务。&lt;/p&gt;
+&lt;p&gt;且 WSL2 与 宿主系统共用端口，于是运行另一份 Clash 服务时需要更改相应的端口。&lt;/p&gt;
+&lt;p&gt;因此订阅配置更新脚本需要做一些修改，使更新后的配置文件自动替换为指定端口&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/bash
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+URL&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://abc.xyz/user123/clash&amp;#34;&lt;/span&gt;
+
+FILENAME&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;configs/&lt;span style=&#34;color:#66d9ef&#34;&gt;$(&lt;/span&gt;basename $0 .sh&lt;span style=&#34;color:#66d9ef&#34;&gt;)&lt;/span&gt;.yaml
+
+curl -L &lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;URL&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    | tac | tac &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    | sed -e &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;s/^port: [0-9]*/port: 7900/&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -e &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;s/^socks-port: [0-9]*/socks-port: 7901/&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -e &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;s/^external-controller: [0-9\.\:]*/external-controller: 127.0.0.1:9010/&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    &amp;gt; &lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;FILENAME&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt; $? -eq &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;; &lt;span style=&#34;color:#66d9ef&#34;&gt;then&lt;/span&gt;
+    cp &lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;FILENAME&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt; config.yaml
+&lt;span style=&#34;color:#66d9ef&#34;&gt;fi&lt;/span&gt;;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
     
     <item>
       <title>Vue 引入 TinyMCE 富文本编辑器</title>

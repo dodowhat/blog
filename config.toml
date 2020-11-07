@@ -1,6 +1,6 @@
 baseURL = "/blog/"
 languageCode = "zh"
-title = "FBI WARNING"
+title = "纸上谈兵"
 theme = "anubis"
 hasCJKLanguage = true
 publishDir = "docs"
