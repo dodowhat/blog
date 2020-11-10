@@ -16,7 +16,7 @@
 <link rel="icon" type="image/x-icon" href="/blog/favicon.ico">
 <link rel="apple-touch-icon-precomposed" href="/blog/favicon.png">
 
-<link rel="stylesheet" href="/blog/css/light.css?rnd=1605029419" />
+<link rel="stylesheet" href="/blog/css/light.css?rnd=1605030264" />
 <style>
 
     [data-theme="dark"] {   
@@ -48,7 +48,7 @@
 
 </style>
 
-<link rel="stylesheet" href="/blog/css/style.css?rnd=1605029419" />
+<link rel="stylesheet" href="/blog/css/style.css?rnd=1605030264" />
 
 
 
@@ -101,6 +101,7 @@
             <p>Clash 是一款支持多种协议的代理客户端，在 Windows 以及 MacOS 上均有图形化版本，然而 Linux 上没有。</p>
 <p>好在 Clash 提供了用于管理服务的 RESTful API ，并且作者开发了配套的 Web 版管理面板，其他人也可以根据 API 开发自己的管理面板。</p>
 <p>本文记录了如何在 Linux 系统上丝滑地使用 Clash 服务。</p>
+<p>(本文内容包含的脚本相对粗糙，是为了降低复杂度说清原理而简化的原始版本，完全版已上传至 Github 仓库 <a href="https://github.com/dodowhat/clash-for-linux">clash-for-linux</a> ，功能更完善)</p>
 <h2 id="准备工作">准备工作</h2>
 <p>访问 <a href="https://github.com/Dreamacro/clash/releases">Clash Github Releases</a>，找到适合自己硬件架构的版本，一般为 clash-linux-amd64。</p>
 <p>命令行操作：</p>
@@ -249,28 +250,7 @@ $ git checkout gh-pages
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo ln -s /etc/nginx/sites-available/yacd.conf /etc/nginx/sites-enabled/
 $ sudo nginx
 </code></pre></div><p>然后就可以访问 http://localhost:9090 使用了</p>
-<h2 id="订阅更新脚本在-wsl2-上的一些调整">订阅更新脚本在 WSL2 上的一些调整</h2>
-<p>WSL2 与 Windows 10 宿主系统共用端口，运行 Clash 服务时需要更改相应的端口。</p>
-<p>(实测不改端口也能各自使用，但偶尔会影响 Windows 版 Clash 正常工作，具体原因不明。
-猜测为：微软做了一些工作使得运行在 WSL2 上的服务可通过 localhost 访问，但此功能时好时坏，应该和这个有关。)</p>
-<p>因此订阅配置更新脚本需要做一些修改，使更新后的配置文件自动替换为指定端口</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/bin/bash
-</span><span style="color:#75715e"></span>
-URL<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://abc.xyz/user123/clash&#34;</span>
 
-FILENAME<span style="color:#f92672">=</span>configs/<span style="color:#66d9ef">$(</span>basename $0 .sh<span style="color:#66d9ef">)</span>.yaml
-
-curl -L <span style="color:#e6db74">${</span>URL<span style="color:#e6db74">}</span> <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    | tac | tac <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    | sed -e <span style="color:#e6db74">&#39;s/^port: [0-9]*/port: 7900/&#39;</span> <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -e <span style="color:#e6db74">&#39;s/^socks-port: [0-9]*/socks-port: 7901/&#39;</span> <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -e <span style="color:#e6db74">&#39;s/^external-controller: [0-9\.\:]*/external-controller: 127.0.0.1:9010/&#39;</span> <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    &gt; <span style="color:#e6db74">${</span>FILENAME<span style="color:#e6db74">}</span>
-
-<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $? -eq <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
-    cp <span style="color:#e6db74">${</span>FILENAME<span style="color:#e6db74">}</span> config.yaml
-<span style="color:#66d9ef">fi</span>;
-</code></pre></div>
         </div>
         
 

@@ -20,6 +20,7 @@
       <description>&lt;p&gt;Clash 是一款支持多种协议的代理客户端，在 Windows 以及 MacOS 上均有图形化版本，然而 Linux 上没有。&lt;/p&gt;
 &lt;p&gt;好在 Clash 提供了用于管理服务的 RESTful API ，并且作者开发了配套的 Web 版管理面板，其他人也可以根据 API 开发自己的管理面板。&lt;/p&gt;
 &lt;p&gt;本文记录了如何在 Linux 系统上丝滑地使用 Clash 服务。&lt;/p&gt;
+&lt;p&gt;(本文内容包含的脚本相对粗糙，是为了降低复杂度说清原理而简化的原始版本，完全版已上传至 Github 仓库 &lt;a href=&#34;https://github.com/dodowhat/clash-for-linux&#34;&gt;clash-for-linux&lt;/a&gt; ，功能更完善)&lt;/p&gt;
 &lt;h2 id=&#34;准备工作&#34;&gt;准备工作&lt;/h2&gt;
 &lt;p&gt;访问 &lt;a href=&#34;https://github.com/Dreamacro/clash/releases&#34;&gt;Clash Github Releases&lt;/a&gt;，找到适合自己硬件架构的版本，一般为 clash-linux-amd64。&lt;/p&gt;
 &lt;p&gt;命令行操作：&lt;/p&gt;
@@ -168,28 +169,7 @@ $ git checkout gh-pages
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ sudo ln -s /etc/nginx/sites-available/yacd.conf /etc/nginx/sites-enabled/
 $ sudo nginx
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后就可以访问 http://localhost:9090 使用了&lt;/p&gt;
-&lt;h2 id=&#34;订阅更新脚本在-wsl2-上的一些调整&#34;&gt;订阅更新脚本在 WSL2 上的一些调整&lt;/h2&gt;
-&lt;p&gt;WSL2 与 Windows 10 宿主系统共用端口，运行 Clash 服务时需要更改相应的端口。&lt;/p&gt;
-&lt;p&gt;(实测不改端口也能各自使用，但偶尔会影响 Windows 版 Clash 正常工作，具体原因不明。
-猜测为：微软做了一些工作使得运行在 WSL2 上的服务可通过 localhost 访问，但此功能时好时坏，应该和这个有关。)&lt;/p&gt;
-&lt;p&gt;因此订阅配置更新脚本需要做一些修改，使更新后的配置文件自动替换为指定端口&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/bash
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
-URL&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://abc.xyz/user123/clash&amp;#34;&lt;/span&gt;
-
-FILENAME&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;configs/&lt;span style=&#34;color:#66d9ef&#34;&gt;$(&lt;/span&gt;basename $0 .sh&lt;span style=&#34;color:#66d9ef&#34;&gt;)&lt;/span&gt;.yaml
-
-curl -L &lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;URL&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    | tac | tac &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    | sed -e &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;s/^port: [0-9]*/port: 7900/&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -e &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;s/^socks-port: [0-9]*/socks-port: 7901/&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -e &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;s/^external-controller: [0-9\.\:]*/external-controller: 127.0.0.1:9010/&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    &amp;gt; &lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;FILENAME&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt; $? -eq &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;; &lt;span style=&#34;color:#66d9ef&#34;&gt;then&lt;/span&gt;
-    cp &lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;FILENAME&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt; config.yaml
-&lt;span style=&#34;color:#66d9ef&#34;&gt;fi&lt;/span&gt;;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+</description>
     </item>
     
     <item>
