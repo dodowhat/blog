@@ -37,7 +37,7 @@ $ chmod u+x clash
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;后台运行&#34;&gt;后台运行&lt;/h2&gt;
 &lt;p&gt;Clash 本身不提供后台服务运行的功能，需要用户自己想办法，大致有三种实现方式：&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;Systemd&lt;/li&gt;
+&lt;li&gt;Systemd (官方 Gihub Wiki 有具体教程)&lt;/li&gt;
 &lt;/ul&gt;
 &lt;blockquote&gt;
 &lt;p&gt;通过创建 Systemd 配置文件将 Clash 纳入系统进程管理&lt;/p&gt;
@@ -80,6 +80,7 @@ nohup ./clash -d . &amp;gt; /dev/null 2&amp;gt;&amp;amp;&lt;span style=&#34;colo
 -d 参数可以指定配置文件所在的目录，这里我指定为当前所在目录，所以写一个 . 就可以了。
 特别说明一下配置文件名称必须为 config.yaml，否则程序不会识别。&lt;/p&gt;
 &lt;/blockquote&gt;
+&lt;p&gt;或者也可以用 -f 参数指定配置文件，文件名无要求。&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&amp;gt; /dev/null 2&amp;gt;&amp;amp;1 &amp;amp;&lt;/li&gt;
 &lt;/ul&gt;
@@ -168,9 +169,9 @@ $ git checkout gh-pages
 $ sudo nginx
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后就可以访问 http://localhost:9090 使用了&lt;/p&gt;
 &lt;h2 id=&#34;订阅更新脚本在-wsl2-上的一些调整&#34;&gt;订阅更新脚本在 WSL2 上的一些调整&lt;/h2&gt;
-&lt;p&gt;由于 WSL2 无法访问 Windows 10 宿主系统的服务，无法连接运行在宿主系统上的 Windows 版本 Clash ，
-所以要单独运行自己的 Clash 服务。&lt;/p&gt;
-&lt;p&gt;且 WSL2 与 宿主系统共用端口，于是运行另一份 Clash 服务时需要更改相应的端口。&lt;/p&gt;
+&lt;p&gt;WSL2 与 Windows 10 宿主系统共用端口，运行 Clash 服务时需要更改相应的端口。&lt;/p&gt;
+&lt;p&gt;(实测不改端口也能各自使用，但偶尔会影响 Windows 版 Clash 正常工作，具体原因不明。
+猜测为：微软做了一些工作使得运行在 WSL2 上的服务可通过 localhost 访问，但此功能时好时坏，应该和这个有关。)&lt;/p&gt;
 &lt;p&gt;因此订阅配置更新脚本需要做一些修改，使更新后的配置文件自动替换为指定端口&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/bash
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
