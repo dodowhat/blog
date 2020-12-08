@@ -16,7 +16,7 @@
 <link rel="icon" type="image/x-icon" href="/blog/favicon.ico">
 <link rel="apple-touch-icon-precomposed" href="/blog/favicon.png">
 
-<link rel="stylesheet" href="/blog/css/light.css?rnd=1605030264" />
+<link rel="stylesheet" href="/blog/css/light.css?rnd=1607411571" />
 <style>
 
     [data-theme="dark"] {   
@@ -48,7 +48,7 @@
 
 </style>
 
-<link rel="stylesheet" href="/blog/css/style.css?rnd=1605030264" />
+<link rel="stylesheet" href="/blog/css/style.css?rnd=1607411571" />
 
 
 
@@ -226,30 +226,17 @@ curl -L <span style="color:#e6db74">${</span>URL<span style="color:#e6db74">}</s
 </li>
 </ul>
 <p>两个项目的 gh-pages 分支均为编译好的成品，可直接部署使用。</p>
-<p>以 yacd 为例，clone 项目，切换分支</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ git clone https://github.com/haishanh/yacd ~/yacd
-$ cd ~/yacd
-$ git fetch
-$ git checkout gh-pages
-</code></pre></div><p>安装 Nginx (以 Ubuntu 系统为例)</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo apt install nginx
-</code></pre></div><p>创建配置 /etc/nginx/sites-available/yacd.conf</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-nginx" data-lang="nginx"><span style="color:#66d9ef">server</span> {
-	<span style="color:#f92672">listen</span> <span style="color:#ae81ff">9090</span>;
+<p>以 yacd 为例</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># 下载</span>
+$ curl -L https://github.com/haishanh/yacd/archive/gh-pages.zip --output yacd-gh-pages.zip
 
-	<span style="color:#f92672">server_name</span> <span style="color:#e6db74">_</span>;
-
-	<span style="color:#f92672">root</span> <span style="color:#e6db74">/home/xxx/yacd</span>;
-	<span style="color:#f92672">index</span> <span style="color:#e6db74">index.html</span>;
-
-	<span style="color:#f92672">location</span> <span style="color:#e6db74">/</span> {
-		<span style="color:#f92672">try_files</span> $uri $uri/ =<span style="color:#ae81ff">404</span>;
-	}
-}
-</code></pre></div><p>启用配置，启动服务</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo ln -s /etc/nginx/sites-available/yacd.conf /etc/nginx/sites-enabled/
-$ sudo nginx
-</code></pre></div><p>然后就可以访问 http://localhost:9090 使用了</p>
+<span style="color:#75715e"># 解压并重命名</span>
+unzip yacd-gh-pages.zip
+mv yacd-gh-pages ui
+</code></pre></div><p>然后修改 start.sh</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># 启动服务</span>
+nohup ./clash -d . -ext-ctl 127.0.0.1:9090 -ext-ui ui &gt; /dev/null 2&gt;&amp;<span style="color:#ae81ff">1</span> &amp;
+</code></pre></div><p>然后就可以访问 http://127.0.0.1:9090/ui 使用了</p>
 
         </div>
         

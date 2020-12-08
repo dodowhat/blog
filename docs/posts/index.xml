@@ -145,30 +145,17 @@ curl -L &lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;URL&lt;span sty
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;两个项目的 gh-pages 分支均为编译好的成品，可直接部署使用。&lt;/p&gt;
-&lt;p&gt;以 yacd 为例，clone 项目，切换分支&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ git clone https://github.com/haishanh/yacd ~/yacd
-$ cd ~/yacd
-$ git fetch
-$ git checkout gh-pages
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;安装 Nginx (以 Ubuntu 系统为例)&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ sudo apt install nginx
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;创建配置 /etc/nginx/sites-available/yacd.conf&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-nginx&#34; data-lang=&#34;nginx&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;server&lt;/span&gt; {
-	&lt;span style=&#34;color:#f92672&#34;&gt;listen&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;9090&lt;/span&gt;;
+&lt;p&gt;以 yacd 为例&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 下载&lt;/span&gt;
+$ curl -L https://github.com/haishanh/yacd/archive/gh-pages.zip --output yacd-gh-pages.zip
 
-	&lt;span style=&#34;color:#f92672&#34;&gt;server_name&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;_&lt;/span&gt;;
-
-	&lt;span style=&#34;color:#f92672&#34;&gt;root&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;/home/xxx/yacd&lt;/span&gt;;
-	&lt;span style=&#34;color:#f92672&#34;&gt;index&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;index.html&lt;/span&gt;;
-
-	&lt;span style=&#34;color:#f92672&#34;&gt;location&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;/&lt;/span&gt; {
-		&lt;span style=&#34;color:#f92672&#34;&gt;try_files&lt;/span&gt; $uri $uri/ =&lt;span style=&#34;color:#ae81ff&#34;&gt;404&lt;/span&gt;;
-	}
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;启用配置，启动服务&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ sudo ln -s /etc/nginx/sites-available/yacd.conf /etc/nginx/sites-enabled/
-$ sudo nginx
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后就可以访问 http://localhost:9090 使用了&lt;/p&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# 解压并重命名&lt;/span&gt;
+unzip yacd-gh-pages.zip
+mv yacd-gh-pages ui
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后修改 start.sh&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 启动服务&lt;/span&gt;
+nohup ./clash -d . -ext-ctl 127.0.0.1:9090 -ext-ui ui &amp;gt; /dev/null 2&amp;gt;&amp;amp;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后就可以访问 http://127.0.0.1:9090/ui 使用了&lt;/p&gt;
 </description>
     </item>
     

@@ -160,43 +160,21 @@ Web 管理面板有两个版本
 
 两个项目的 gh-pages 分支均为编译好的成品，可直接部署使用。
 
-以 yacd 为例，clone 项目，切换分支
+以 yacd 为例
 
 ```bash
-$ git clone https://github.com/haishanh/yacd ~/yacd
-$ cd ~/yacd
-$ git fetch
-$ git checkout gh-pages
+# 下载
+$ curl -L https://github.com/haishanh/yacd/archive/gh-pages.zip --output yacd-gh-pages.zip
+
+# 解压并重命名
+unzip yacd-gh-pages.zip
+mv yacd-gh-pages ui
 ```
 
-安装 Nginx (以 Ubuntu 系统为例)
-
+然后修改 start.sh
 ```bash
-$ sudo apt install nginx
+# 启动服务
+nohup ./clash -d . -ext-ctl 127.0.0.1:9090 -ext-ui ui > /dev/null 2>&1 &
 ```
 
-创建配置 /etc/nginx/sites-available/yacd.conf
-
-```nginx
-server {
-	listen 9090;
-
-	server_name _;
-
-	root /home/xxx/yacd;
-	index index.html;
-
-	location / {
-		try_files $uri $uri/ =404;
-	}
-}
-```
-
-启用配置，启动服务
-
-```bash
-$ sudo ln -s /etc/nginx/sites-available/yacd.conf /etc/nginx/sites-enabled/
-$ sudo nginx
-```
-
-然后就可以访问 http://localhost:9090 使用了
+然后就可以访问 http://127.0.0.1:9090/ui 使用了
