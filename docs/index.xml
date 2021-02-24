@@ -2,53 +2,53 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>温故知新</title>
-    <link>/blog/</link>
+    <link>https://dodowhat.github.io/blog/</link>
     <description>Recent content on 温故知新</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Fri, 06 Nov 2020 20:45:17 +0800</lastBuildDate><atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 06 Nov 2020 20:45:17 +0800</lastBuildDate><atom:link href="https://dodowhat.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Linux 系统 Clash 服务管理</title>
-      <link>/blog/posts/clash-service-management-on-linux/</link>
+      <link>https://dodowhat.github.io/blog/posts/clash-service-management-on-linux/</link>
       <pubDate>Fri, 06 Nov 2020 20:45:17 +0800</pubDate>
       
-      <guid>/blog/posts/clash-service-management-on-linux/</guid>
+      <guid>https://dodowhat.github.io/blog/posts/clash-service-management-on-linux/</guid>
       <description>Clash 是一款支持多种协议的代理客户端，在 Windows 以及 MacOS 上均有图形化版本，然而 Linux 上没有。 好在 Clash 提供了用于管理服务的 RESTful API ，并且作者开发了配套的 Web 版管理面板</description>
     </item>
     
     <item>
       <title>Vue 引入 TinyMCE 富文本编辑器</title>
-      <link>/blog/posts/vue-tinymce-intergration/</link>
+      <link>https://dodowhat.github.io/blog/posts/vue-tinymce-intergration/</link>
       <pubDate>Thu, 07 May 2020 14:44:38 +0800</pubDate>
       
-      <guid>/blog/posts/vue-tinymce-intergration/</guid>
+      <guid>https://dodowhat.github.io/blog/posts/vue-tinymce-intergration/</guid>
       <description>本项目基于 vue-cli 创建的项目实现。 将 TinyMCE 封装成一个 Vue Component，过程稍有些不优雅，因为官方提供的 tinymce-vue 功能不完善，不能直接使用。 准备工作 首先，通</description>
     </item>
     
     <item>
       <title>自用 RSS 服务搭建 (Miniflux &#43; RSSHub)</title>
-      <link>/blog/posts/rss-service-deployment-via-docker-on-ubuntu/</link>
+      <link>https://dodowhat.github.io/blog/posts/rss-service-deployment-via-docker-on-ubuntu/</link>
       <pubDate>Thu, 19 Mar 2020 00:00:31 +0800</pubDate>
       
-      <guid>/blog/posts/rss-service-deployment-via-docker-on-ubuntu/</guid>
+      <guid>https://dodowhat.github.io/blog/posts/rss-service-deployment-via-docker-on-ubuntu/</guid>
       <description>RSSHub 是一个开源易用的 RSS 生成器，可以给任何奇奇怪怪的内容生成 RSS 订阅源，官网有详细介绍，链接在文章底部。 Miniflux 是一个网页版 RSS 阅读器，简洁干净。 本文主要</description>
     </item>
     
     <item>
       <title>部署 GOST HTTPS 代理</title>
-      <link>/blog/posts/gost-https-proxy-deployment-via-docker-on-ubuntu/</link>
+      <link>https://dodowhat.github.io/blog/posts/gost-https-proxy-deployment-via-docker-on-ubuntu/</link>
       <pubDate>Wed, 18 Mar 2020 21:38:50 +0800</pubDate>
       
-      <guid>/blog/posts/gost-https-proxy-deployment-via-docker-on-ubuntu/</guid>
+      <guid>https://dodowhat.github.io/blog/posts/gost-https-proxy-deployment-via-docker-on-ubuntu/</guid>
       <description>目前 HTTPS 是比较稳一种协议。 GOST 是一个GO语言实现的代理工具，官网有详细介绍，链接在文章底部。 本文主要记录用 GOST 部署 HTTPS 代理服务的过程。 VPS 初始化以及 Docker</description>
     </item>
     
     <item>
       <title>Ubuntu Server 初始化设置 &#43; Docker 安装</title>
-      <link>/blog/posts/ubuntu-server-initiation-and-docker-installation/</link>
+      <link>https://dodowhat.github.io/blog/posts/ubuntu-server-initiation-and-docker-installation/</link>
       <pubDate>Tue, 17 Mar 2020 21:14:08 +0800</pubDate>
       
-      <guid>/blog/posts/ubuntu-server-initiation-and-docker-installation/</guid>
+      <guid>https://dodowhat.github.io/blog/posts/ubuntu-server-initiation-and-docker-installation/</guid>
       <description>本文主要记录 Ubuntu Server 的一些初始化操作。 适用于本机、虚拟机、VPS 云主机等等创建后初次运行时参考，方便后续维护使用。 包括：新增普通权限用户、配置S</description>
     </item>
     
