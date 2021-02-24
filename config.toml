@@ -1,4 +1,4 @@
-baseURL = "/blog/"
+baseURL = "https://dodowhat.github.io/blog/"
 languageCode = "zh"
 title = "温故知新"
 theme = "hugo-primer"
