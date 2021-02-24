@@ -15,10 +15,23 @@
 
 ## Clone repository
 
-    git clone https://github.com/dodowhat/blog.git
+    git clone --recurse-submodules -j8 https://github.com/dodowhat/blog.git
 
-## Clone Hugo theme
+## Fetch Hugo theme Submodules
+
+If you clone this repo without `--recurse-submodules` flag, run
 
     cd blog
-    git rm -r themes/anubis
-    git submodule add https://github.com/mitrichius/hugo-theme-anubis.git themes/anubis
+    git submodule update --init --recursive
+
+To update submodules, run
+
+    git submodule update --recursive --remote
+
+or
+
+    git pull --recurse-submodules
+
+## Running
+
+    hugo server -b localhost

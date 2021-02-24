@@ -1,6 +1,8 @@
 baseURL = "/blog/"
 languageCode = "zh"
-title = "纸上谈兵"
-theme = "anubis"
+title = "温故知新"
+theme = "hugo-primer"
 hasCJKLanguage = true
 publishDir = "docs"
+pygmentsCodeFences = true
+pygmentsUseClasses = true
