@@ -1,8 +1,16 @@
 baseURL = "https://dodowhat.github.io/blog/"
-languageCode = "zh"
+
 title = "温故知新"
+
 theme = "hugo-primer"
-hasCJKLanguage = true
+
 publishDir = "docs"
+
+languageCode = "zh"
+hasCJKLanguage = true
+
 pygmentsCodeFences = true
 pygmentsUseClasses = true
+
+[params]
+useIcon = true
