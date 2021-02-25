@@ -3,17 +3,22 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://dodowhat.github.io/blog/posts/clash-service-management-on-linux/</loc>
-    <lastmod>2020-11-06T20:45:17+08:00</lastmod>
+    <loc>https://dodowhat.github.io/blog/posts/</loc>
+    <lastmod>2021-02-25T10:04:48+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://dodowhat.github.io/blog/posts/</loc>
-    <lastmod>2020-11-06T20:45:17+08:00</lastmod>
+    <loc>https://dodowhat.github.io/blog/posts/tricks-reference/</loc>
+    <lastmod>2021-02-25T10:04:48+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://dodowhat.github.io/blog/</loc>
+    <lastmod>2021-02-25T10:04:48+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://dodowhat.github.io/blog/posts/clash-service-management-on-linux/</loc>
     <lastmod>2020-11-06T20:45:17+08:00</lastmod>
   </url>
   

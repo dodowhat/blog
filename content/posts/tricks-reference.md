@@ -1,7 +1,7 @@
 ---
 title: "小技巧速查手册"
 date: 2021-02-25T10:04:48+08:00
-draft: true
+draft: false
 categories:
 tags:
 keywords:
