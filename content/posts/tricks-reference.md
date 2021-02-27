@@ -94,3 +94,9 @@ lsblk -f
 git config --global http.proxy http://127.0.0.1:7890
 git config --global --unset http.proxy
 ```
+
+## PowerShell Emacs Key Bindings
+
+```PowerShell
+Set-PSReadLineOption -EditMode Emacs
+```
