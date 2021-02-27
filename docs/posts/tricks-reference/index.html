@@ -82,7 +82,7 @@
 <p>以前的做法是收藏网址书签，但是可能会失效，所以还是自己记一下</p>
 <h2 id="linux-快速删除大文件夹">Linux 快速删除大文件夹</h2>
 <p>一般情况下删文件夹用命令 <code>rm -rf target_dir</code></p>
-<p>但是对拥有大量子目录嵌套的大文件夹来说这个命令会卡住，几小时都不会有结果</p>
+<p>但是对拥有大量子目录嵌套的大文件夹(例如timeshift)来说这个命令会卡住，几小时都不会有结果</p>
 <p>这时候要用下面的方法</p>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">mkdir empty_dir
 rsync -a --delete empty_dir target_dir
@@ -90,7 +90,7 @@ rsync -a --delete empty_dir target_dir
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">visudo
 myuser <span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span> NOPASSWD:ALL
 </code></pre></div><h2 id="powershell-设置代理">PowerShell 设置代理</h2>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nv">$env</span>.https_proxy<span class="o">=</span><span class="s2">&#34;127.0.0.1:7890&#34;</span>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nv">$env</span>:https_proxy<span class="o">=</span><span class="s2">&#34;127.0.0.1:7890&#34;</span>
 </code></pre></div><p>等同于 Linux 下的 <code>export https_proxy=127.0.0.1:7890</code></p>
 <h2 id="linux-查看硬盘-uuid">Linux 查看硬盘 uuid</h2>
 <p>挂载新硬盘时先查看 uuid</p>
@@ -103,7 +103,18 @@ myuser <span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)<
 <p>先按 <code>Ctrl + Alt + F2</code>(或F3-F6) 切换到其他 tty , 登录并执行:</p>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">sudo systemctl restart display-manager
 </code></pre></div><p>按 <code>Alt + F1</code> 回到 tty1</p>
-
+<h2 id="linux-重命名分区标签">Linux 重命名分区标签</h2>
+<p>ext2/3/4 文件系统</p>
+<pre><code>sudo e2label /dev/sdaX &lt;label&gt;
+</code></pre><h2 id="linux-查看硬盘信息">Linux 查看硬盘信息</h2>
+<pre><code>sudo lshw -class disk
+</code></pre><h2 id="linux-格式化分区">Linux 格式化分区</h2>
+<pre><code>sudo mkfs -t ext4 /dev/sdXX
+lsblk -f
+</code></pre><h2 id="git-设置代理">Git 设置代理</h2>
+<pre><code>git config --global http.proxy http://127.0.0.1:7890
+git config --global --unset http.proxy
+</code></pre>
   </section>
 
   <section>
@@ -127,6 +138,10 @@ myuser <span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)<
     <li><a href="#powershell-设置代理">PowerShell 设置代理</a></li>
     <li><a href="#linux-查看硬盘-uuid">Linux 查看硬盘 uuid</a></li>
     <li><a href="#ubuntu-重启图形化界面">Ubuntu 重启图形化界面</a></li>
+    <li><a href="#linux-重命名分区标签">Linux 重命名分区标签</a></li>
+    <li><a href="#linux-查看硬盘信息">Linux 查看硬盘信息</a></li>
+    <li><a href="#linux-格式化分区">Linux 格式化分区</a></li>
+    <li><a href="#git-设置代理">Git 设置代理</a></li>
   </ul>
 </nav></div>
   
