@@ -15,7 +15,7 @@ keywords:
 
 一般情况下删文件夹用命令 `rm -rf target_dir`
 
-但是对拥有大量子目录嵌套的大文件夹来说这个命令会卡住，几小时都不会有结果
+但是对拥有大量子目录嵌套的大文件夹(例如timeshift)来说这个命令会卡住，几小时都不会有结果
 
 这时候要用下面的方法
 
@@ -30,14 +30,6 @@ rsync -a --delete empty_dir target_dir
 visudo
 myuser ALL=(ALL) NOPASSWD:ALL
 ```
-
-## PowerShell 设置代理
-
-```bash
-$env.https_proxy="127.0.0.1:7890"
-```
-
-等同于 Linux 下的 `export https_proxy=127.0.0.1:7890`
 
 ## Linux 查看硬盘 uuid
 
@@ -66,3 +58,31 @@ sudo systemctl restart display-manager
 ```
 
 按 `Alt + F1` 回到 tty1
+
+## Linux 重命名分区标签
+
+ext2/3/4 文件系统
+
+```
+sudo e2label /dev/sdaX <label>
+```
+
+## Linux 查看硬盘信息
+
+```
+sudo lshw -class disk
+```
+
+## Linux 格式化分区
+
+```
+sudo mkfs -t ext4 /dev/sdXX
+lsblk -f
+```
+
+## Git 设置代理
+
+```
+git config --global http.proxy http://127.0.0.1:7890
+git config --global --unset http.proxy
+```
