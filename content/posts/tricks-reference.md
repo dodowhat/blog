@@ -31,6 +31,14 @@ visudo
 myuser ALL=(ALL) NOPASSWD:ALL
 ```
 
+## PowerShell 设置代理
+
+```bash
+$env:https_proxy="127.0.0.1:7890"
+```
+
+等同于 Linux 下的 `export https_proxy=127.0.0.1:7890`
+
 ## Linux 查看硬盘 uuid
 
 挂载新硬盘时先查看 uuid
