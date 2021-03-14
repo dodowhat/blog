@@ -1,0 +1,1 @@
+scp -r docs\* blog:~/blog

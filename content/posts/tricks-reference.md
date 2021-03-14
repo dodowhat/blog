@@ -100,3 +100,13 @@ git config --global --unset http.proxy
 ```PowerShell
 Set-PSReadLineOption -EditMode Emacs
 ```
+
+## RSA 公钥格式转换
+
+```
+# SSH2 => OpenSSH
+ssh-keygen -i -f ssh2.pub > openssh.pub
+
+# OpenSSH => SSH2
+ssh-keygen -e -f openssh.pub > ssh2.pub
+```
