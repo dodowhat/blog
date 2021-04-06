@@ -1,7 +1,6 @@
 ---
-layout: post
 title: 通过设置NAT网络为Hyper-V虚拟机配置静态IP
-updated_at: 2019-05-31
+date: 2019-05-31T20:45:17+08:00
 ---
 
 ## 背景

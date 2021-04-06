@@ -1,7 +1,6 @@
 ---
 title: 在Windows下编码，Linux下运行——解决方案
-layout: post
-updated_at: 2019-04-21
+date: 2019-04-21T20:45:17+08:00
 ---
 
 ## 2019-04-21更新

@@ -1,7 +1,6 @@
 ---
-layout: post
 title: Virtualbox虚拟机配置静态IP
-updated_at: 2019-06-01
+date: 2019-06-01T20:45:17+08:00
 ---
 
 ## 2019-11-29更新

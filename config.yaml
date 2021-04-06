@@ -1,0 +1,10 @@
+baseURL: "/"
+title: "温故知新"
+theme: "hugo-primer"
+publishDir: "docs"
+languageCode: "zh"
+hasCJKLanguage: true
+pygmentsCodeFences: true
+pygmentsUseClasses: true
+params:
+  useIcon: true

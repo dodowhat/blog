@@ -1,5 +1,6 @@
 ---
-title: "小技巧速查手册"
+menu: "main"
+title: "命令速查"
 date: 2021-02-25T10:04:48+08:00
 draft: false
 categories:
@@ -74,6 +75,9 @@ ext2/3/4 文件系统
 ```
 sudo e2label /dev/sdaX <label>
 ```
+
+FAT32 文件系统 fatlabel
+NTFS 文件系统 ntfslabel
 
 ## Linux 查看硬盘信息
 
