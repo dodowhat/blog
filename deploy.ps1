@@ -1,2 +1,2 @@
-ssh blog "rm -rf ~/blog/*"
-scp -r docs\* blog:~/blog
+ssh blog "rm -rf /var/www/blog/*"
+scp -r docs\* blog:/var/www/blog
