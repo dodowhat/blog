@@ -2,6 +2,7 @@
 title: "Vue 引入 TinyMCE 富文本编辑器"
 date: 2020-05-07T14:44:38+08:00
 draft: false
+tags: ["VUE"]
 ---
 
 本项目基于 [vue-cli](https://github.com/vuejs/vue-cli) 创建的项目实现。
@@ -13,8 +14,8 @@ draft: false
 首先，通过 npm 安装 tinymce 和 tinymce-vue
 
 ```bash
-$ npm install --save tinymce
-$ npm install --save @tinymce/tinymce-vue
+npm install --save tinymce
+npm install --save @tinymce/tinymce-vue
 ```
 
 接着，是不优雅的部分:

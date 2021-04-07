@@ -1,5 +1,6 @@
 ---
 menu: "main"
+weight: 50
 title: "命令速查"
 date: 2021-02-25T10:04:48+08:00
 draft: false
@@ -30,6 +31,12 @@ rsync -a --delete empty_dir target_dir
 ```bash
 visudo
 myuser ALL=(ALL) NOPASSWD:ALL
+```
+
+## sudo 使用当前环境变量
+
+```bash
+sudo -E COMMAND
 ```
 
 ## PowerShell 设置代理

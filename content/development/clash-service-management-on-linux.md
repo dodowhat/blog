@@ -2,6 +2,7 @@
 title: "Linux 系统 Clash 服务管理"
 date: 2020-11-06T20:45:17+08:00
 draft: false
+tags: ["GFW"]
 ---
 
 Clash 是一款支持多种协议的代理客户端，在 Windows 以及 MacOS 上均有图形化版本，然而 Linux 上没有。
@@ -20,16 +21,16 @@ Clash 是一款支持多种协议的代理客户端，在 Windows 以及 MacOS �
 
 ```bash
 # 创建一个工作目录
-$ mkdir clash-linux-management-tools
-$ cd clash-linux-management-tools
+mkdir clash-linux-management-tools
+cd clash-linux-management-tools
 # 下载
-$ wget https://github.com/Dreamacro/clash/releases/download/v1.2.0/clash-linux-amd64-v1.2.0.gz
+wget https://github.com/Dreamacro/clash/releases/download/v1.2.0/clash-linux-amd64-v1.2.0.gz
 # 解压
-$ gzip -d clash-linux-amd64-v1.2.0.gz
+gzip -d clash-linux-amd64-v1.2.0.gz
 # 解压出来程序的文件名带有平台、版本等信息，重命名为 clash 方便执行
-$ mv clash-linux-amd64-v1.2.0 clash
+mv clash-linux-amd64-v1.2.0 clash
 # 赋予程序可执行权限
-$ chmod u+x clash
+chmod u+x clash
 ```
 
 ## 后台运行
@@ -109,7 +110,7 @@ fi
 首先我们创建一个目录，用来存放下载后的订阅配置文件
 
 ```bash
-$ mkdir configs
+mkdir configs
 ```
 
 接着创建订阅配置管理脚本，假如某“机场”名叫 "abc" ，创建 abc.sh (名字可以随便起)
@@ -164,7 +165,7 @@ Web 管理面板有两个版本
 
 ```bash
 # 下载
-$ curl -L https://github.com/haishanh/yacd/archive/gh-pages.zip --output yacd-gh-pages.zip
+curl -L https://github.com/haishanh/yacd/archive/gh-pages.zip --output yacd-gh-pages.zip
 
 # 解压并重命名
 unzip yacd-gh-pages.zip

@@ -1,6 +1,7 @@
 ---
 title: Virtualbox虚拟机配置静态IP
 date: 2019-06-01T20:45:17+08:00
+tags: ["Virtual Machine"]
 ---
 
 ## 2019-11-29更新

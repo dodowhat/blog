@@ -2,6 +2,7 @@
 title: "部署 GOST HTTPS 代理"
 date: 2020-03-18T21:38:50+08:00
 draft: false
+tags: ["GFW"]
 ---
 
 目前 HTTPS 是比较稳一种协议。
@@ -23,18 +24,18 @@ VPS 初始化以及 Docker 安装参考这篇文章 [Ubuntu VPS 初始化设置 
 安装 certbot:
 
 ```bash
-$ sudo apt-get update
-$ sudo apt-get install software-properties-common
-$ sudo add-apt-repository universe
-$ sudo add-apt-repository ppa:certbot/certbot
-$ sudo apt-get update
-$ sudo apt-get install certbot
+sudo apt-get update
+sudo apt-get install software-properties-common
+sudo add-apt-repository universe
+sudo add-apt-repository ppa:certbot/certbot
+sudo apt-get update
+sudo apt-get install certbot
 ```
 
 签发证书:
 
 ```bash
-$ sudo certbot certonly --standalone
+sudo certbot certonly --standalone
 ```
 
 根据提示输入域名和邮箱
@@ -67,8 +68,8 @@ sudo docker run -d --name gost \
 启动服务:
 
 ```bash
-$ chmod +x gost.sh
-$ ./gost.sh
+chmod +x gost.sh
+./gost.sh
 ```
 
 ## 证书自动更新
@@ -76,7 +77,7 @@ $ ./gost.sh
 证书会在90天后过期，我们建立一个cron job来自动更新证书:
 
 ```bash
-$ sudo crontab -e
+sudo crontab -e
 ```
 
 写入如下内容:

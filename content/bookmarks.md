@@ -1,6 +1,7 @@
 ---
 title: "我的书签"
 menu: "main"
+weight: 100
 date: 2021-04-06T20:45:17+08:00
 ---
 
@@ -22,9 +23,9 @@ date: 2021-04-06T20:45:17+08:00
 
 ### 视频处理
 
-- [HandBrake](https://handbrake.fr/downloads.php)
+- [HandBrake](https://handbrake.fr/downloads.php) 开源视频格式转换工具
 
-- [avidemux](http://avidemux.sourceforge.net/)
+- [avidemux](http://avidemux.sourceforge.net/) 开源视频编辑工具
 
 ### 系统工具
 
@@ -48,7 +49,7 @@ date: 2021-04-06T20:45:17+08:00
 
 - [Flash Player](https://www.adobe.com/support/flashplayer/debug_downloads.html)
 
-- [winkill](https://casey.io/winkill/)
+- [winkill](https://casey.io/winkill/) 禁用 Win 键，玩全屏游戏时很有用
 
 ### 浏览器
 
@@ -72,7 +73,7 @@ date: 2021-04-06T20:45:17+08:00
 
 ### 设计
 
-- [Draw.io](https://app.diagrams.net/)
+- [Draw.io](https://app.diagrams.net/) 在线思维导图工具
 
 - [标点狗](https://www.logoko.com.cn/) 在线设计LOGO
 
@@ -84,7 +85,7 @@ date: 2021-04-06T20:45:17+08:00
 
 - [Squoosh](https://squoosh.app/) 在线图片编辑
 
-- [removebg](https://www.remove.bg/)
+- [removebg](https://www.remove.bg/) 在线移除照片背景
 
 ### 比价
 
@@ -104,7 +105,7 @@ date: 2021-04-06T20:45:17+08:00
 
 - [GCPing](https://gcping.com/)
 
-- [虎客](https://www.hoocs.com/)
+- [虎客](https://www.hoocs.com/) 这里有卖 Google Voice
 
 - [公共DNS大全](https://dns.iui.im/)
 

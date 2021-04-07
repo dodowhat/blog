@@ -1,5 +1,5 @@
 baseURL: "/"
-title: "温故知新"
+title: "温故知新博客"
 theme: "hugo-primer"
 publishDir: "docs"
 languageCode: "zh"
@@ -8,3 +8,9 @@ pygmentsCodeFences: true
 pygmentsUseClasses: true
 params:
   useIcon: true
+
+menu:
+  main:
+    - name: "RSS"
+      url: "/index.xml"
+      weight: 200
