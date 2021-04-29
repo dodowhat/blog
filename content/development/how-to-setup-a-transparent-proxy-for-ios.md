@@ -4,21 +4,6 @@ date: 2017-07-11T20:45:17+08:00
 tags: ["GFW"]
 ---
 
-## 2019-04-21更新
-
-实际上本文中的方案我没有使用太久，2018年我尝试用Squid搭建了一个HTTPS代理，搭配Surge3使用了一阵，效果也不尽如人意。
-
-如今到了9102年，目前我的只是单纯使用Surge3或者ShadowRocket配合SS后端使用。
-并且自己维护了一份基于[ipip.net](ipip.net)提供的国内IP列表转换而来的Surge3配置文件(ShadowRocket兼容Surge3配置，可直接导入使用)，使访问国内IP的请示走直联，其它请求走代理。
-
-项目地址：[https://github.com/dodowhat/china-ip-rules](https://github.com/dodowhat/china-ip-rules)
-
-虽然方案已经过时，文中的其它技术细节依旧有参考价值。
-
-以下为原文
-
----
-
 ## 需求背景
 最近，我想让我的iPhone实现自动分流科学上网。
 
@@ -352,6 +337,15 @@ shadowsocks for android，iOS上原本有shadowsocks for ios，但是已经废�
 用iPhone打开Safari访问`http://1.1.1.1:8080/myvpn.mobileconfig`，
 输入解锁密码，安装描述文件，成功后，进入VPN设置，列表里出现了你命名的VPN配置，
 选中，连接，大功告成。
+
+## 2019-04-21更新
+
+实际上本文中的方案我没有使用太久，2018年我尝试用Squid搭建了一个HTTPS代理，搭配Surge3使用了一阵，效果也不尽如人意。
+
+如今到了2019年，目前我的只是单纯使用Surge3或者ShadowRocket配合SS后端使用。
+并且自己维护了一份基于[ipip.net](ipip.net)提供的国内IP列表转换而来的Surge3配置文件(ShadowRocket兼容Surge3配置，可直接导入使用)，使访问国内IP的请示走直联，其它请求走代理。
+
+项目地址：[https://github.com/dodowhat/china-ip-rules](https://github.com/dodowhat/china-ip-rules)
 
 ## 参考资料
 * [https://www.digitalocean.com/community/tutorials/how-to-configure-bind-as-a-caching-or-forwarding-dns-server-on-ubuntu-16-04](https://www.digitalocean.com/community/tutorials/how-to-configure-bind-as-a-caching-or-forwarding-dns-server-on-ubuntu-16-04)

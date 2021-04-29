@@ -4,8 +4,6 @@ date: 2019-04-18T20:45:17+08:00
 tags: ["Virtual Machine"]
 ---
 
-文中图片资源都被我删掉了，这是发生在我将博客从 Jekyll 迁移到 Hugo 时候的事，本来连文章都想删掉，因为当时觉得记录地没什么意义，图片都是软件截图，没价值得很，转过头来又觉得还是留个念想吧，就这样了
-
 ## 背景
 
 在Windows10上搭建Linux开发环境。
@@ -46,17 +44,11 @@ Hyper-V是Windows平台下的一款虚拟机软件，内置于Windows10专业版
 
 #### 1.1 新建虚拟交换机(虚拟网卡)
 
-在开始菜单搜索hyper-v manager(Hyper-V管理器)并打开(示例为英文界面，该操作对中文界面同样适用，下同)。
-
-![start-menu-hyper-v-manager](/assets/post_images/start-menu-hyper-v-manager.png)
+在开始菜单搜索hyper-v manager(Hyper-V管理器)并打开。
 
 找到Virtual Switch Manager(虚拟交换机管理器)并打开。
 
-![open-virtual-switch-manager](/assets/post_images/open-virtual-switch-manager.png)
-
 选择New virtual network switch(新建) --> Internal(内部) --> Create Virtual Switch(创建)。
-
-![create-virtual-switch](/assets/post_images/create-virtual-switch.png)
 
 这个虚拟网卡就是我们的NAT网关。
 
@@ -64,21 +56,15 @@ Hyper-V是Windows平台下的一款虚拟机软件，内置于Windows10专业版
 
 打开Control Panel(控制面板) --> Network and Sharing Center(网络与共享中心) --> change adapter settings(更改适配器设置)
 
-![network-and-sharing-center](/assets/post_images/network-and-sharing-center.png)
-
 以vEthernet开头的是Hyper-V创建的虚拟网卡，左面的是开启Hyper-V时默认创建的，右面的是我们刚才自己创建的。
 
 对着我们自己创建的虚拟网卡右键 --> Proerties(属性)。
 
 选中Internet 协议版本 4 (TCP/IPv4)，点击Proerties(属性)。
 
-![change-adapter-settings](/assets/post_images/change-adapter-settings.png)
-
 按下图设置IP address(IP地址)与Subnet musk(子网掩码)。
 
 一般我们家里的路由器网段都是`192.168.0.X` `192.168.1.X`等等，这里我们设定成一个和它们不冲突的网段，比如`192.168.79.X`。
-
-![internet-protocol-v4-properties](/assets/post_images/internet-protocol-v4-properties.png)
 
 这样，NAT网关就配置好了。
 
@@ -86,13 +72,9 @@ Hyper-V是Windows平台下的一款虚拟机软件，内置于Windows10专业版
 
 右键开始菜单，以管理员身份运行PowerShell。
 
-![start-menu-powershell](/assets/post_images/start-menu-powershell.png)
-
 运行以下命令：
 
     New-NetNat -Name MyNATnetwork -InternalIPInterfaceAddressPrefix 192.168.79.0/24
-
-![powershell-new-netnat](/assets/post_images/powershell-new-netnat.png)
 
 这里的`192.168.79.0/24`是子网掩码的另一种表示方法，`/24`等同于`255.255.255.0`，具体请参考相关网络基础知识。
 
@@ -107,10 +89,6 @@ Hyper-V是Windows平台下的一款虚拟机软件，内置于Windows10专业版
 最后将虚拟机的网络适配器改为我们自己创建的虚拟网卡。
 
 右键虚拟机 --> Settings(设置)。
-
-![open-virtual-michine-settings](/assets/post_images/open-virtual-michine-settings.png)
-
-![change-network-adapter](/assets/post_images/change-network-adapter.png)
 
 这样，NAT网络就设置好了，第一步完成。
 

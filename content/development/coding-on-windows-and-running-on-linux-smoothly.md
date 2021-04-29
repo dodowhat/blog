@@ -4,16 +4,6 @@ date: 2017-06-17T20:45:17+08:00
 tags: ["Virtual Machine"]
 ---
 
-## 2019-04-21更新
-
-来到9102年，我重新折腾了一下开发环境，有了更好的选择，请参考我的新文章：
-
-[通过设置NAT网络为Hyper-V虚拟机配置静态IP](/2019/04/18/how-to-setup-static-ip-for-hyper-v-virtual-machine-via-nat.html)
-
-以下为原文
-
----
-
 ## 需求背景
 多数情况下人们自家的电脑都是Windows系统，主娱乐。
 而在Windows平台下某些编程语言的开发体验并不理想（例如：Ruby）。

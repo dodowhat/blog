@@ -75,6 +75,8 @@ date: 2021-04-06T20:45:17+08:00
 
 - [Draw.io](https://app.diagrams.net/) 在线思维导图工具
 
+- [ASCIIFlow](http://asciiflow.com/) 在线 ASCII 绘图工具
+
 - [标点狗](https://www.logoko.com.cn/) 在线设计LOGO
 
 - [中国色](http://zhongguose.com/) 中国传统颜色
@@ -110,3 +112,15 @@ date: 2021-04-06T20:45:17+08:00
 - [公共DNS大全](https://dns.iui.im/)
 
 - [iOS捷径库](https://shortcuts.sspai.com/)
+
+- [lofi music](https://lofi.cafe/) 像素风格纯音乐
+
+- [中国法律服务网](https://ai.12348.gov.cn/pc/)
+
+- [高等教育出版社大学教材](https://ebook.hep.com.cn/ebooks/h5/index.html#/)
+
+- [艾琳的挑战](https://www.erin.jpf.go.jp/) 日语学习
+
+- [ProtonDB](https://www.protondb.com/) 能在 Linux 运行的 Steam 游戏列表
+
+- [职级对标](https://duibiao.info/) 互联网公司薪资分享

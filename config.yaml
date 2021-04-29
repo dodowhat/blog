@@ -1,5 +1,5 @@
 baseURL: "/"
-title: "温故知新博客"
+title: "温故知新 BLOG"
 theme: "hugo-primer"
 publishDir: "docs"
 languageCode: "zh"

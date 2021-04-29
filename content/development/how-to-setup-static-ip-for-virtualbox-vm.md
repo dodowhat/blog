@@ -4,21 +4,11 @@ date: 2019-06-01T20:45:17+08:00
 tags: ["Virtual Machine"]
 ---
 
-文中图片资源都被我删掉了，这是发生在我将博客从 Jekyll 迁移到 Hugo 时候的事，本来连文章都想删掉，因为当时觉得记录地没什么意义，图片都是软件截图，没价值得很，转过头来又觉得还是留个念想吧，就这样了
-
-## 2019-11-29更新
-
-现在又用回WSL了，叹气。。。
-
-以下为原文
-
 ## 背景
 
-自前一篇文章[通过设置NAT网络为Hyper-V虚拟机配置静态IP](/2019/04/18/how-to-setup-static-ip-for-hyper-v-virtual-machine-via-nat.html)，开发环境换到Hyper-V以来，时隔一个月，它就出问题了。
+自前一篇文章`《通过设置NAT网络为Hyper-V虚拟机配置静态IP》`，开发环境换到Hyper-V以来，时隔一个月，它就出问题了。
 
-起因是创建虚拟机时硬盘容量设置为10GB，使用过程中很快就满了，于是我不得不去找扩容的方法。方法找到了，正准备实施的时候，就发现Hyper-V出问题了，具体表现为不能通过自带的连接管理器连接虚拟机，如下图：
-
-![hyper-v-cannot-connect-to-vm.png](/assets/post_images/hyper-v-cannot-connect-to-vm.png)
+起因是创建虚拟机时硬盘容量设置为10GB，使用过程中很快就满了，于是我不得不去找扩容的方法。方法找到了，正准备实施的时候，就发现Hyper-V出问题了，具体表现为不能通过自带的连接管理器连接虚拟机。
 
 虚拟机是可以正常启动/关闭/运行的，因为平时都是使用SSH方式连接的，所以一直没发现这个问题，直到此时。
 
@@ -30,13 +20,9 @@ tags: ["Virtual Machine"]
 
 创建虚拟机以及安装系统的过程就不赘述了，系统用的是Ubuntu Server 18.04 LTS。
 
-创建Host-only(仅主机)网络，如图：
+创建Host-only(仅主机)网络。
 
-![virtualbox-create-host-only-network.png](/assets/post_images/virtualbox-create-host-only-network.png)
-
-接着进入虚拟机网络设置，如图：
-
-![virtualbox-vm-network-settings.png](/assets/post_images/virtualbox-vm-network-settings.png)
+接着进入虚拟机网络设置。
 
 Adapter 1(适配器)保持默认的NAT，Adapter 2设置为Host-only，Name(名称)选择我们上一步创建的网络。
 
@@ -56,6 +42,10 @@ Adapter 1(适配器)保持默认的NAT，Adapter 2设置为Host-only，Name(名�
 保存退出，接着执行`sudo netplan apply`使网络配置生效。之后就可以用SSH连接`192.168.56.78`访问虚拟机了。
 
 过程比Hyper-V简单好多。
+
+## 2019-11-29更新
+
+现在又用回WSL了，叹气。。。
 
 ## 参考链接
 
