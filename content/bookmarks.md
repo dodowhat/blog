@@ -41,6 +41,10 @@ date: 2021-04-06T20:45:17+08:00
 
 - [FreeFileSync](https://www.freefilesync.org/)
 
+- [TreeSize Free](https://www.jam-software.com/treesize_free) 文件夹占用快速扫描
+
+- [Snipaste](https://www.snipaste.com/) 截图工具
+
 ### 输入法
 
 - [wubiLex](http://wubi.aardio.com/)
