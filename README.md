@@ -21,4 +21,4 @@
 
 ## Running
 
-    hugo server -b localhost
+    hugo server -b 0.0.0.0
