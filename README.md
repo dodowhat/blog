@@ -15,22 +15,9 @@
 
 ## Clone repository
 
-    git clone --recurse-submodules -j8 https://github.com/dodowhat/blog.git
+    git clone https://github.com/dodowhat/blog.git
 
-## Fetch Hugo theme Submodules
-
-If you clone this repo without `--recurse-submodules` flag, run
-
-    cd blog
-    git submodule update --init --recursive
-
-To update submodules, run
-
-    git submodule update --recursive --remote
-
-or
-
-    git pull --recurse-submodules
+    git clone https://github.com/qqhann/hugo-primer.git themes/hugo-primer
 
 ## Running
 
