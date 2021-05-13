@@ -61,6 +61,8 @@ date: 2021-04-06T20:45:17+08:00
 
 - [Firefox](https://ftp.mozilla.org/pub/firefox/releases/latest/README.txt)
 
+- [Min Browser](https://minbrowser.org/)
+
 ### Linux
 
 - [Awesome Linux Software](https://voluong.gitbooks.io/awesome-linux-software/content/)

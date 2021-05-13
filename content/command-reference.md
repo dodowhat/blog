@@ -121,3 +121,33 @@ ssh-keygen -i -f ssh2.pub > openssh.pub
 # OpenSSH => SSH2
 ssh-keygen -e -f openssh.pub > ssh2.pub
 ```
+
+## IntelliJ IDEA & WSL 2 编译 connection time out 报错
+
+任务栏 -> 右键 Windows Security 图标 -> View security dashboard -> Firewall & network protection -> Restore firewalls to default
+
+重启 IDEA 并操作，在弹出的防火墙窗口允许 Private 和 Public 连接
+
+## Mysql 8 Error: Access denied for user 'root'@'localhost'
+
+Edit `/etc/mysql/mysql.conf.d/mysqld.cnf`
+
+find and replace:
+
+    bind-address = 0.0.0.0
+
+then
+
+    sudo mysql
+    GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
+    UPDATE mysql.user SET host='%' WHERE user='root';
+    ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'MyPassword';
+
+## Mysql Disable Strict Mode
+
+    mysql -u root -p -e "SET GLOBAL sql_mode = 'NO_ENGINE_SUBSTITUTION';"
+    mysql -u root -p -e "SELECT @@GLOBAL.sql_mode;"
+
+or edit `/etc/mysql/mysql.conf.d/mysqld.cnf`, under `[mysqld]`, look for `sql_mode`
+
+    sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
