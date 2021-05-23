@@ -79,6 +79,8 @@ date: 2021-04-06T20:45:17+08:00
 
 ### 设计
 
+- [Whimsical](https://whimsical.com/) 在线绘图工具集
+
 - [Draw.io](https://app.diagrams.net/) 在线思维导图工具
 
 - [ASCIIFlow](http://asciiflow.com/) 在线 ASCII 绘图工具
