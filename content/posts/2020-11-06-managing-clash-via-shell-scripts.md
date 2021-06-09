@@ -1,17 +1,15 @@
 ---
-title: "Linux 系统 Clash 服务管理"
+title: "Shell 脚本管理 Clash 服务"
 date: 2020-11-06T20:45:17+08:00
 draft: false
-tags: ["GFW"]
+tags: ["GFW", "Clash", "Shell"]
 ---
 
 Clash 是一款支持多种协议的代理客户端，在 Windows 以及 MacOS 上均有图形化版本，然而 Linux 上没有。
 
 好在 Clash 提供了用于管理服务的 RESTful API ，并且作者开发了配套的 Web 版管理面板，其他人也可以根据 API 开发自己的管理面板。
 
-本文记录了如何在 Linux 系统上丝滑地使用 Clash 服务。
-
-(本文内容包含的脚本相对粗糙，是为了降低复杂度说清原理而简化的原始版本，完全版已上传至 Github 仓库 [clash-for-linux](https://github.com/dodowhat/clash-for-linux) ，功能更完善)
+本文记录了如何通过简单 Shell 脚本管理 Clash 服务。
 
 ## 准备工作
  

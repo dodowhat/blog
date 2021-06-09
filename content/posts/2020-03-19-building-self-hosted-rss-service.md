@@ -1,8 +1,8 @@
 ---
-title: "自用 RSS 服务搭建 (Miniflux + RSSHub)"
+title: "自建 RSS 服务 (Miniflux + RSSHub)"
 date: 2020-03-19T00:00:31+08:00
 draft: false
-tags: ["RSS"]
+tags: ["RSS", "Docker"]
 ---
 
 RSSHub 是一个开源易用的 RSS 生成器，可以给任何奇奇怪怪的内容生成 RSS 订阅源，官网有详细介绍，链接在文章底部。
