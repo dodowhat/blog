@@ -13,7 +13,7 @@ tags: ["WSL", "VM"]
 
 它会预先保留一系列端口，别的服务不能用，并且通过常规方式看不到占用，就很坑。
 
-想要查看这个端口列表，需要通过管理员权限的终端运行 `netsh int ipv4 delete excludedportrange protocol=tcp` 命令查看。
+想要查看这个端口列表，需要通过管理员权限的终端运行 `netsh int ipv4 show excludedportrange protocol=tcp` 命令查看。
 
 当时运行完命令一看，好家伙，几乎一大半端口在这个列表里。
 
